@@ -12,6 +12,10 @@ def mozartize(bot, update, args):
     update.message.reply_text(f"{'mMm' for letter in ''.join(args)}")
 
 
+def aehxtend(bot, update, args):
+    update.message.reply_text(f"Coming soon™️")
+
+
 def main():
     try:
         bot_token = os.environ['BOT_TOKEN']
@@ -22,6 +26,7 @@ def main():
     updater = Updater(bot_token)
     updater.dispatcher.add_handler(CommandHandler('hello', hello))
     updater.dispatcher.add_handler(CommandHandler('mozartize', mozartize, pass_args=True))
+    updater.dispatcher.add_handler(CommandHandler('ähxtend', aehxtend, pass_args=True))
     updater.start_polling()
     updater.idle()
 
