@@ -9,7 +9,10 @@ def hello(bot, update):
 
 
 def mozartize(bot, update, args):
-    update.message.reply_text(f"{'mMm' for letter in ''.join(args)}")
+    out = ""
+    for letter in ''.join(args):
+        out += 'mNm'
+    update.message.reply_text(out)
 
 
 def aehxtend(bot, update, args):
