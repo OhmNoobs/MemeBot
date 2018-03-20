@@ -5,8 +5,11 @@ from telegram.ext import Updater, CommandHandler
 
 
 def hello(bot, update):
-    update.message.reply_text(
-        'Hello {}'.format(update.message.from_user.first_name))
+    update.message.reply_text(f'Hello {update.message.from_user.first_name}')
+
+
+def mozartize(bot, update, args):
+    update.message.reply_text(f"{'mMm' for letter in ''.join(args)}")
 
 
 def main():
@@ -15,11 +18,10 @@ def main():
     except KeyError:
         logging.fatal("No bot token specified. Please provide it via environment variable 'BOT_TOKEN'.")
         return
-
+    
     updater = Updater(bot_token)
-
     updater.dispatcher.add_handler(CommandHandler('hello', hello))
-
+    updater.dispatcher.add_handler(CommandHandler('mozartize', mozartize, pass_args=True))
     updater.start_polling()
     updater.idle()
 
