@@ -154,3 +154,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+/key.secret
+.idea/MemeBot.iml
+.idea/misc.xml
