@@ -3,9 +3,8 @@ import os
 
 import sys
 from logging import handlers
-from bot import fortune_is_willing
-from bot import Mozartizer
-
+from Mozartizer import Mozartizer
+from helper import fortune_is_willing
 from telegram.ext import Updater, CommandHandler
 
 VERSION = "Ähxtended!"

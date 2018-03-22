@@ -1,4 +1,4 @@
-from bot.helper import fortune_is_willing
+from helper import fortune_is_willing
 from typing import List
 
 
