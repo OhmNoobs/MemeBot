@@ -13,7 +13,7 @@ class Mozartizer:
             self.mozartized_sentence.append(self._maybe_mozartize(word))
         return ' '.join(self.mozartized_sentence)
 
-    def _maybe_mozartize(self, word):
+    def _maybe_mozartize(self, word: str) -> str:
         if fortune_is_willing():
             word = self.mozartize_word(word)
         return word

@@ -10,15 +10,15 @@ from telegram.ext import Updater, CommandHandler
 VERSION = "Ähxtended!"
 
 
-def hello(bot, update):
+def hello(bot, update) -> None:
     update.message.reply_text(f'Hello {update.message.from_user.first_name}')
 
 
-def mozartize_sentence(bot, update, args):
+def mozartize_sentence(bot, update, args) -> None:
     update.message.reply_text(Mozartizer(args).mozartize())
 
 
-def aehxtend(bot, update, args):
+def aehxtend(bot, update, args) -> None:
     sentence = ' '.join(args)
     i = 0
     while i < len(sentence):
@@ -33,7 +33,7 @@ def aehxtend(bot, update, args):
     update.message.reply_text(sentence)
 
 
-def version(bot, update):
+def version(bot, update) -> None:
     update.message.reply_text(VERSION)
 
 
