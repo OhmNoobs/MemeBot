@@ -1,4 +1,4 @@
-from bot import helper
+from bot.helper import fortune_is_willing
 from typing import List
 
 
@@ -14,7 +14,7 @@ class Mozartizer:
         return ' '.join(self.mozartized_sentence)
 
     def _maybe_mozartize(self, word):
-        if helper.fortune_is_willing():
+        if fortune_is_willing():
             word = self.mozartize_word(word)
         return word
 
@@ -22,8 +22,8 @@ class Mozartizer:
     def mozartize_word(word: str) -> str:
         mozartized_word = ''
         for _ in word:
-            if helper.fortune_is_willing():
-                mozartized_word += 'n' if helper.fortune_is_willing() else 'N'
+            if fortune_is_willing():
+                mozartized_word += 'n' if fortune_is_willing() else 'N'
             else:
-                mozartized_word += 'M' if helper.fortune_is_willing() else 'm'
+                mozartized_word += 'M' if fortune_is_willing() else 'm'
         return mozartized_word

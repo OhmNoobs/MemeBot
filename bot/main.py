@@ -8,7 +8,7 @@ from bot import Mozartizer
 
 from telegram.ext import Updater, CommandHandler
 
-VERSION = "0.1"
+VERSION = "Mozartized!"
 
 
 def hello(bot, update):
