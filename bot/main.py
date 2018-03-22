@@ -3,7 +3,7 @@ import os
 
 import sys
 from logging import handlers
-from bot.helper import fortune_is_willing
+from bot import fortune_is_willing
 from bot import Mozartizer
 
 from telegram.ext import Updater, CommandHandler
