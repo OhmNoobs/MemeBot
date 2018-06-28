@@ -2,6 +2,7 @@ import requests
 import re
 
 URL = 'http://www.werkswelt.de/?id=hohf'
+NEW_LINE_SEPARATOR = "\n\n"
 
 
 def fetch_food() -> list:
@@ -26,8 +27,8 @@ def dish_up(food) -> str:
     feast = ""
     for meal in food:
         meal_name = meal.group('meal_name').replace('<sup><b>', '_').replace('</b></sup>', '_')
-        feast += f"{meal.group('meal_number')}. {meal_name} *{meal.group('meal_price_student')}*\n"
-    return feast[:-1]
+        feast += f"{meal.group('meal_number')}. {meal_name} *{meal.group('meal_price_student')}*{NEW_LINE_SEPARATOR}"
+    return feast[:-len(NEW_LINE_SEPARATOR)]
 
 
 def serve() -> str:
