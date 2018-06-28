@@ -25,8 +25,8 @@ def fetch_food() -> list:
 def dish_up(food) -> str:
     feast = ""
     for meal in food:
-        meal_name = meal.group('meal_name').replace('<sup><b>', '__').replace('</b></sup>', '__')
-        feast += f"{meal.group('meal_number')}. {meal_name} **{meal.group('meal_price_student')}**\n"
+        meal_name = meal.group('meal_name').replace('<sup><b>', '_').replace('</b></sup>', '_')
+        feast += f"{meal.group('meal_number')}. {meal_name} *{meal.group('meal_price_student')}*\n"
     return feast[:-1]
 
 

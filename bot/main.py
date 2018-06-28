@@ -11,7 +11,7 @@ from Mozartizer import Mozartizer
 from helper import fortune_is_willing
 from telegram.ext import Updater, CommandHandler
 
-VERSION = "Ähxtended!"
+VERSION = "FOOOOOD!"
 
 
 def hello(bot, update) -> None:
