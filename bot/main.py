@@ -3,6 +3,10 @@ import os
 
 import sys
 from logging import handlers
+
+import telegram
+
+import food_scraper
 from Mozartizer import Mozartizer
 from helper import fortune_is_willing
 from telegram.ext import Updater, CommandHandler
@@ -33,6 +37,10 @@ def aehxtend(bot, update, args) -> None:
     update.message.reply_text(sentence)
 
 
+def food(bot, update) -> None:
+    update.message.reply_text(food_scraper.serve(), parse_mode=telegram.ParseMode.MARKDOWN)
+
+
 def version(bot, update) -> None:
     update.message.reply_text(VERSION)
 
@@ -49,6 +57,7 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('version', version))
     updater.dispatcher.add_handler(CommandHandler('mozartize', mozartize_sentence, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('ähxtend', aehxtend, pass_args=True))
+    updater.dispatcher.add_handler(CommandHandler('food', food))
     updater.start_polling()
     updater.idle()
 
