@@ -1,17 +1,21 @@
 import logging
 import os
-
 import sys
-from logging import handlers
 
-import telegram
-
+import requests
 import food_scraper
+import telegram
+import re
+
+from logging import handlers
 from Mozartizer import Mozartizer
 from helper import fortune_is_willing
 from telegram.ext import Updater, CommandHandler
 
 VERSION = "FOOOOOD!"
+CHUCK_API = "https://api.chucknorris.io/jokes/random"
+CHUCK = re.compile("chuck", re.IGNORECASE)
+NORRIS = re.compile("norris", re.IGNORECASE)
 
 
 def hello(bot, update) -> None:
@@ -41,23 +45,32 @@ def food(bot, update) -> None:
     update.message.reply_text(food_scraper.serve(), parse_mode=telegram.ParseMode.MARKDOWN)
 
 
+def chuck(bot, update, args) -> None:
+    response = requests.get(CHUCK_API).json()
+    joke = response["value"]  # type: str
+    if args:
+        if len(args) > 0:
+            joke = CHUCK.sub(args[0].capitalize(), joke)
+        if len(args) > 1:
+            joke = NORRIS.sub(args[1].capitalize(), joke)
+    if joke:
+        update.message.reply_text(joke)
+
+
 def version(bot, update) -> None:
     update.message.reply_text(VERSION)
 
 
-def main():
-    try:
-        bot_token = os.environ['BOT_TOKEN']
-    except KeyError:
-        logging.fatal("No bot token specified. Please provide it via environment variable 'BOT_TOKEN'.")
-        return
-    
-    updater = Updater(bot_token)
+def main(updater):
     updater.dispatcher.add_handler(CommandHandler('hello', hello))
     updater.dispatcher.add_handler(CommandHandler('version', version))
     updater.dispatcher.add_handler(CommandHandler('mozartize', mozartize_sentence, pass_args=True))
-    updater.dispatcher.add_handler(CommandHandler('ähxtend', aehxtend, pass_args=True))
+    updater.dispatcher.add_handler(CommandHandler('aehxtend', aehxtend, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('food', food))
+    updater.dispatcher.add_handler(CommandHandler('joke', chuck, pass_args=True))
+
+    job_queue = updater.job_queue
+
     updater.start_polling()
     updater.idle()
 
@@ -75,4 +88,13 @@ if __name__ == '__main__':
     fh.setFormatter(formatter)
     log.addHandler(fh)
     logging.info('Started logging')
-    main()
+
+    try:
+        bot_token = os.environ['BOT_TOKEN']
+    except KeyError as e:
+        logging.fatal("No bot token specified. Please provide it via environment variable 'BOT_TOKEN'.")
+        raise e
+
+    updater = Updater(bot_token)
+
+    main(updater)
