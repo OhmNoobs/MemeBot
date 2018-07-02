@@ -1,0 +1,8 @@
+version: "3"
+services:
+  bot:
+    build: MemeBot
+    image: woop/memebot:latest
+    environment:
+      - BOT_TOKEN=SUCH_SECRET
+    container_name: memebot
