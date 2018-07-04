@@ -81,14 +81,13 @@ def remove_from_th(bot, update, args) -> None:
             reason = " ".join(args[2:])
     else:
         update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
+        return
 
     image = Image.open("removal_form.png")
     drawing = ImageDraw.Draw(image)
-    # font = ImageFont.truetype(<font-file>, <font-size>)
     sans_serif = ImageFont.truetype("Roboto-Regular.ttf", 16)
     hand_writing = ImageFont.truetype("DawningofaNewDay.ttf", 22)
     hand_writing_small = ImageFont.truetype("DawningofaNewDay.ttf", 18)
-    # draw.text((x, y),"Sample Text",(r,g,b))
     drawing.text((120, 90), last_name, (0, 0, 0), font=sans_serif)
     drawing.text((420, 90), surname, (0, 0, 0), font=sans_serif)
     drawing.text((420, 210), date.today().strftime("%d.%m.%Y"), (0, 0, 0), font=sans_serif)
