@@ -17,6 +17,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 from io import BytesIO
 
+
 VERSION = "FOOOOOD!"
 CHUCK_API = "https://api.chucknorris.io/jokes/random"
 CHUCK = re.compile("chuck", re.IGNORECASE)
@@ -79,7 +80,7 @@ def remove_from_th(bot, update, args) -> None:
         if len(args) > 2:
             reason = " ".join(args[2:])
 
-    image = Image.open("removal_form.png")
+    image = Image.open("/usr/src/app/bot/removal_form.png")
     drawing = ImageDraw.Draw(image)
     # font = ImageFont.truetype(<font-file>, <font-size>)
     sans_serif = ImageFont.truetype("Roboto-Regular.ttf", 16)
