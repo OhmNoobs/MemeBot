@@ -7,10 +7,15 @@ import food_scraper
 import telegram
 import re
 
+from datetime import date
 from logging import handlers
 from Mozartizer import Mozartizer
 from helper import fortune_is_willing
 from telegram.ext import Updater, CommandHandler
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+from io import BytesIO
 
 VERSION = "FOOOOOD!"
 CHUCK_API = "https://api.chucknorris.io/jokes/random"
@@ -57,6 +62,45 @@ def chuck(bot, update, args) -> None:
         update.message.reply_text(joke)
 
 
+def kudos(bot, update) -> None:
+    # 
+    pass
+
+
+def remove_from_th(bot, update, args) -> None:
+    surname = ""
+    last_name = ""
+    reason = "Noob."
+    if len(args) > 0:
+        if len(args) > 0:
+            surname = args[0]
+        if len(args) > 1:
+            last_name = args[1]
+        if len(args) > 2:
+            reason = " ".join(args[2:])
+
+    image = Image.open("removal_form.png")
+    drawing = ImageDraw.Draw(image)
+    # font = ImageFont.truetype(<font-file>, <font-size>)
+    sans_serif = ImageFont.truetype("Roboto-Regular.ttf", 16)
+    hand_writing = ImageFont.truetype("DawningofaNewDay.ttf", 22)
+    hand_writing_small = ImageFont.truetype("DawningofaNewDay.ttf", 18)
+    # draw.text((x, y),"Sample Text",(r,g,b))
+    drawing.text((120, 90), last_name, (0, 0, 0), font=sans_serif)
+    drawing.text((420, 90), surname, (0, 0, 0), font=sans_serif)
+    drawing.text((420, 210), date.today().strftime("%d.%m.%Y"), (0, 0, 0), font=sans_serif)
+    drawing.text((170, 360), date.today().strftime("%m/%Y"), (0, 0, 0), font=sans_serif)
+    drawing.text((420, 759), f"{surname} {last_name}", (0, 81, 158), font=hand_writing)
+    drawing.text((40, 645), reason, (0, 81, 158), font=hand_writing_small)
+    drawing.text((40, 773), "Nürnberg, " + date.today().strftime("%d. %B %Y"), (0, 81, 158), font=hand_writing_small)
+    bio = BytesIO()
+    bio.name = 'image.png'
+    image.save(bio, 'png')
+    bio.seek(0)
+    bot.send_photo(update.message.chat_id, photo=bio)
+    pass
+
+
 def version(bot, update) -> None:
     update.message.reply_text(VERSION)
 
@@ -68,6 +112,8 @@ def main(updater):
     updater.dispatcher.add_handler(CommandHandler('aehxtend', aehxtend, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('food', food))
     updater.dispatcher.add_handler(CommandHandler('joke', chuck, pass_args=True))
+    updater.dispatcher.add_handler(CommandHandler('kudos', kudos))
+    updater.dispatcher.add_handler(CommandHandler('exmatrikulieren', remove_from_th, pass_args=True))
 
     job_queue = updater.job_queue
 
