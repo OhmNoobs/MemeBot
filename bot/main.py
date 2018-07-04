@@ -80,7 +80,7 @@ def remove_from_th(bot, update, args) -> None:
         if len(args) > 2:
             reason = " ".join(args[2:])
 
-    image = Image.open("/usr/src/app/bot/removal_form.png")
+    image = Image.open("removal_form.png")
     drawing = ImageDraw.Draw(image)
     # font = ImageFont.truetype(<font-file>, <font-size>)
     sans_serif = ImageFont.truetype("Roboto-Regular.ttf", 16)
@@ -123,6 +123,9 @@ def main(updater):
 
 
 if __name__ == '__main__':
+    abspath = os.path.abspath(__file__)
+    dir_name = os.path.dirname(abspath)
+    os.chdir(dir_name)
     log = logging.getLogger('')
     log.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
