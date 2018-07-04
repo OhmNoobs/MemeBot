@@ -79,6 +79,8 @@ def remove_from_th(bot, update, args) -> None:
             last_name = args[1]
         if len(args) > 2:
             reason = " ".join(args[2:])
+    else:
+        update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
 
     image = Image.open("removal_form.png")
     drawing = ImageDraw.Draw(image)
