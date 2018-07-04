@@ -74,11 +74,14 @@ def remove_from_th(bot, update, args) -> None:
     reason = "Noob."
     if len(args) > 0:
         if len(args) > 0:
-            surname = args[0]
+            surname = args[0].capitalize()
         if len(args) > 1:
-            last_name = args[1]
+            last_name = args[1].capitalize()
         if len(args) > 2:
             reason = " ".join(args[2:])
+            if len(reason) > 33:
+                reason = reason[:33] + '\n' + reason[33:66]
+
     else:
         update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
         return
@@ -93,7 +96,8 @@ def remove_from_th(bot, update, args) -> None:
     drawing.text((420, 210), date.today().strftime("%d.%m.%Y"), (0, 0, 0), font=sans_serif)
     drawing.text((170, 360), date.today().strftime("%m/%Y"), (0, 0, 0), font=sans_serif)
     drawing.text((420, 759), f"{surname} {last_name}", (0, 81, 158), font=hand_writing)
-    drawing.text((40, 645), reason, (0, 81, 158), font=hand_writing_small)
+    # line length = 33
+    drawing.text((40, 635), reason, (0, 81, 158), font=hand_writing_small)
     drawing.text((40, 773), "Nürnberg, " + date.today().strftime("%d. %B %Y"), (0, 81, 158), font=hand_writing_small)
     bio = BytesIO()
     bio.name = 'image.png'
