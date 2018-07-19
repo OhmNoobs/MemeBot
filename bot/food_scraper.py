@@ -1,6 +1,8 @@
 import requests
 import re
+import logging
 
+log = logging.getLogger('')
 URL = 'http://www.werkswelt.de/?id=hohf'
 NEW_LINE_SEPARATOR = "\n\n"
 
@@ -24,8 +26,6 @@ def fetch_food() -> list:
 
 
 def dish_up(food) -> str:
-    if not food:
-        return "Zum Glück gibts auch Döner..."
     feast = ""
     for meal in food:
         meal_name = meal.group('meal_name').replace('<sup><b>', '_').replace('</b></sup>', '_')
@@ -34,7 +34,12 @@ def dish_up(food) -> str:
 
 
 def serve() -> str:
-    return dish_up(fetch_food())
+    try:
+        food = fetch_food()
+    except AttributeError as food_unmatched:
+        log.error(food_unmatched)
+        return "Zum Glück gibt's immer Döner..."
+    return dish_up(food)
 
 
 if __name__ == '__main__':
