@@ -24,6 +24,8 @@ def fetch_food() -> list:
 
 
 def dish_up(food) -> str:
+    if not food:
+        return "Zum Glück gibts auch Döner..."
     feast = ""
     for meal in food:
         meal_name = meal.group('meal_name').replace('<sup><b>', '_').replace('</b></sup>', '_')
