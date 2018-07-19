@@ -92,7 +92,7 @@ def remove_from_th(bot, update, args) -> None:
     drawing.text((420, 210), date.today().strftime("%d.%m.%Y"), (0, 0, 0), font=sans_serif)
     drawing.text((170, 360), date.today().strftime("%m/%Y"), (0, 0, 0), font=sans_serif)
     drawing.text((420, 759), f"{surname} {last_name}", (0, 81, 158), font=hand_writing)
-    reason_multi_line = text_wrap(reason, hand_writing_small, 568)
+    reason_multi_line = text_wrap(reason, hand_writing_small, 563)
     drawing.text((40, 635), "\n".join(reason_multi_line[:2]), (0, 81, 158), font=hand_writing_small)
     drawing.text((40, 773), "Nürnberg, " + date.today().strftime("%d. %B %Y"), (0, 81, 158), font=hand_writing_small)
     bio = BytesIO()
