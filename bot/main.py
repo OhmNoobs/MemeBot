@@ -17,8 +17,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 from io import BytesIO
 
-
-VERSION = "FOOOOOD!"
+VERSION = "so many reasons..."
 CHUCK_API = "https://api.chucknorris.io/jokes/random"
 CHUCK = re.compile("chuck", re.IGNORECASE)
 NORRIS = re.compile("norris", re.IGNORECASE)
@@ -64,7 +63,6 @@ def chuck(bot, update, args) -> None:
 
 
 def kudos(bot, update) -> None:
-    # 
     pass
 
 
@@ -79,8 +77,6 @@ def remove_from_th(bot, update, args) -> None:
             last_name = args[1].capitalize()
         if len(args) > 2:
             reason = " ".join(args[2:])
-            if len(reason) > 33:
-                reason = reason[:33] + '\n' + reason[33:66]
 
     else:
         update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
@@ -96,8 +92,8 @@ def remove_from_th(bot, update, args) -> None:
     drawing.text((420, 210), date.today().strftime("%d.%m.%Y"), (0, 0, 0), font=sans_serif)
     drawing.text((170, 360), date.today().strftime("%m/%Y"), (0, 0, 0), font=sans_serif)
     drawing.text((420, 759), f"{surname} {last_name}", (0, 81, 158), font=hand_writing)
-    # line length = 33
-    drawing.text((40, 635), reason, (0, 81, 158), font=hand_writing_small)
+    reason_multi_line = text_wrap(reason, hand_writing_small, 568)
+    drawing.text((40, 635), "\n".join(reason_multi_line[:2]), (0, 81, 158), font=hand_writing_small)
     drawing.text((40, 773), "Nürnberg, " + date.today().strftime("%d. %B %Y"), (0, 81, 158), font=hand_writing_small)
     bio = BytesIO()
     bio.name = 'image.png'
@@ -105,6 +101,27 @@ def remove_from_th(bot, update, args) -> None:
     bio.seek(0)
     bot.send_photo(update.message.chat_id, photo=bio)
     pass
+
+
+def text_wrap(text, font, max_width):
+    lines = [""]
+    if font.getsize(text)[0] <= max_width:
+        lines[-1] = text
+    else:
+        words = text.split(' ')
+        for word in words:
+            if font.getsize(word)[0] > max_width:
+                # if the word is to large for a single line, truncate until it fits.
+                while font.getsize(word + "...")[0] > max_width:
+                    word = word[:-1]
+                word = word + "..."
+            if font.getsize(lines[-1] + word)[0] <= max_width:
+                # append word to last line
+                lines[-1] = lines[-1] + word + " "
+            else:
+                # when the line gets longer than the max width append it to new line.
+                lines.append(word + " ")
+    return lines
 
 
 def version(bot, update) -> None:
