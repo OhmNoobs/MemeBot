@@ -19,9 +19,9 @@ class TextFields(NamedTuple):
 
 
 class UsedFonts(NamedTuple):
-    sans_serif: ImageFont
-    hand_writing: ImageFont
-    hand_writing_small: ImageFont
+    sans_serif: ImageFont.FreeTypeFont
+    hand_writing: ImageFont.FreeTypeFont
+    hand_writing_small: ImageFont.FreeTypeFont
 
 
 def remove_from_th(bot, update, args) -> None:
