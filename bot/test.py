@@ -1,6 +1,6 @@
 import unittest
 from PIL import ImageFont
-from main import text_wrap
+from th_remover import text_wrap
 
 
 class TestTextWrap(unittest.TestCase):
