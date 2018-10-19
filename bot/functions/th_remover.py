@@ -2,6 +2,13 @@ from datetime import date
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from typing import NamedTuple
+from pathlib import Path
+
+resources_path = Path("resources")
+canvas_image_path = resources_path / "images" / "removal_form.png"
+fonts_path = resources_path / "fonts"
+roboto_font_face = str(fonts_path / "Roboto-Regular.ttf")
+dawning_of_a_new_day_font_face = str(fonts_path / "DawningofaNewDay.ttf")
 
 
 class Arguments(NamedTuple):
@@ -44,7 +51,7 @@ def get_as_bytes_io(image):
 
 
 def compose_image(args):
-    image = Image.open("removal_form.png")
+    image = Image.open(canvas_image_path)
     drawing = ImageDraw.Draw(image)
     fonts = define_fonts()
     text_fields = build_texts(args, fonts.hand_writing_small)
@@ -63,9 +70,9 @@ def draw_text(args, drawing, fonts, text_fields):
 
 
 def define_fonts():
-    sans_serif = ImageFont.truetype("Roboto-Regular.ttf", 16)
-    hand_writing = ImageFont.truetype("DawningofaNewDay.ttf", 22)
-    hand_writing_small = ImageFont.truetype("DawningofaNewDay.ttf", 18)
+    sans_serif = ImageFont.truetype(roboto_font_face, 16)
+    hand_writing = ImageFont.truetype(dawning_of_a_new_day_font_face, 22)
+    hand_writing_small = ImageFont.truetype(dawning_of_a_new_day_font_face, 18)
     return UsedFonts(sans_serif, hand_writing, hand_writing_small)
 
 

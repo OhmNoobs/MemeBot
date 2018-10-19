@@ -3,18 +3,18 @@ import os
 import sys
 
 import requests
-import food_scraper
+from functions import food_scraper
 import telegram
 import re
 
 from logging import handlers
-from Mozartizer import Mozartizer
+from functions.Mozartizer import Mozartizer
 from helper import fortune_is_willing
 from telegram.ext import Updater, CommandHandler
 
-from th_remover import remove_from_th
+from functions.th_remover import remove_from_th
 
-VERSION = "so many reasons..."
+VERSION = "refactored"
 CHUCK_API = "https://api.chucknorris.io/jokes/random"
 CHUCK = re.compile("chuck", re.IGNORECASE)
 NORRIS = re.compile("norris", re.IGNORECASE)
