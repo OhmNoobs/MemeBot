@@ -3,15 +3,14 @@ import os
 import sys
 
 import requests
-from functions import food_scraper
 import telegram
 import re
 
+from functions import food_scraper
 from logging import handlers
 from functions.Mozartizer import Mozartizer
 from helper import fortune_is_willing
 from telegram.ext import Updater, CommandHandler
-
 from functions.th_remover import remove_from_th
 
 VERSION = "refactored"

@@ -5,11 +5,16 @@ from functions.th_remover import text_wrap
 
 class TestTextWrap(unittest.TestCase):
 
+    empty_string = ""
     short_string = "abc def"
     medium_string = "a b c d e f g h i j k l M n O p Q r S t u F W x Y Z A B C D E F H I J K L M N O P Q"
     long_word = "ABCDEFGHIJKLMNOPQRSTUVXWZABCDEFGHIJKLMNOPQRSTUVXWZ"
     hand_writing_small = ImageFont.truetype("DawningofaNewDay.ttf", 18)
     max_width = 568
+
+    def test_empty(self):
+        wrapped = text_wrap(self.empty_string, self.hand_writing_small, self.max_width)
+        self.assertEqual(wrapped, [self.empty_string])
 
     def test_short(self):
         wrapped = text_wrap(self.short_string, self.hand_writing_small, self.max_width)
