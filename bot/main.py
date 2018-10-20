@@ -102,7 +102,7 @@ if __name__ == '__main__':
     try:
         bot_token = os.environ['BOT_TOKEN']
     except KeyError as e:
-        logging.fatal("No bot token specified. Please provide it via environment variable 'BOT_TOKEN'.")
+        logging.fatal("No bot token specified. Please provide one via environment variable 'BOT_TOKEN'.")
         raise e
 
     updater = Updater(bot_token)
