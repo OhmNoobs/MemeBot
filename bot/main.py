@@ -19,15 +19,15 @@ CHUCK = re.compile("chuck", re.IGNORECASE)
 NORRIS = re.compile("norris", re.IGNORECASE)
 
 
-def hello(bot, update) -> None:
+def hello(_, update) -> None:
     update.message.reply_text(f'Hello {update.message.from_user.first_name}')
 
 
-def mozartize_sentence(bot, update, args) -> None:
+def mozartize_sentence(_, update, args) -> None:
     update.message.reply_text(Mozartizer(args).mozartize())
 
 
-def aehxtend(bot, update, args) -> None:
+def aehxtend(_, update, args) -> None:
     sentence = ' '.join(args)
     i = 0
     while i < len(sentence):
@@ -42,11 +42,11 @@ def aehxtend(bot, update, args) -> None:
     update.message.reply_text(sentence)
 
 
-def food(bot, update) -> None:
+def food(_, update) -> None:
     update.message.reply_text(food_scraper.serve(), parse_mode=telegram.ParseMode.MARKDOWN)
 
 
-def chuck(bot, update, args) -> None:
+def chuck(_, update, args) -> None:
     response = requests.get(CHUCK_API).json()
     joke = response["value"]  # type: str
     if args:
@@ -62,11 +62,11 @@ def kudos(bot, update) -> None:
     pass
 
 
-def version(bot, update) -> None:
+def version(_, update) -> None:
     update.message.reply_text(VERSION)
 
 
-def main(updater):
+def main():
     updater.dispatcher.add_handler(CommandHandler('hello', hello))
     updater.dispatcher.add_handler(CommandHandler('version', version))
     updater.dispatcher.add_handler(CommandHandler('mozartize', mozartize_sentence, pass_args=True))
