@@ -1,61 +1,38 @@
 import logging
 import os
 import sys
-
-import requests
 import telegram
-import re
 
 from functions import food_scraper
 from logging import handlers
 from functions.Mozartizer import Mozartizer
-from helper import fortune_is_willing
+import functions.aehxtender as aehxtender
 from telegram.ext import Updater, CommandHandler
 from functions.th_remover import remove_from_th
+from functions.joke import make_joke_about
+
 
 VERSION = "refactored"
-CHUCK_API = "https://api.chucknorris.io/jokes/random"
-CHUCK = re.compile("chuck", re.IGNORECASE)
-NORRIS = re.compile("norris", re.IGNORECASE)
 
 
 def hello(_, update) -> None:
     update.message.reply_text(f'Hello {update.message.from_user.first_name}')
 
 
-def mozartize_sentence(_, update, args) -> None:
+def mozartize(_, update, args) -> None:
     update.message.reply_text(Mozartizer(args).mozartize())
 
 
 def aehxtend(_, update, args) -> None:
-    sentence = ' '.join(args)
-    i = 0
-    while i < len(sentence):
-        if fortune_is_willing() and fortune_is_willing() and fortune_is_willing():
-            pre_padding = '' if i == 0 or sentence[i-1] == ' ' or sentence[i-1] == '-' else '-'
-            post_padding = '' if i == len(sentence) or sentence[i] == ' ' or sentence[i] == '-' else '-'
-            aehxtension = f"{pre_padding}äh{post_padding}"
-            sentence = sentence[:i] + aehxtension + sentence[i:]
-            i = i + 4  # length of one ähxtension
-        else:
-            i += 1
-    update.message.reply_text(sentence)
+    update.message.reply_text(aehxtender.aehxtend(args))
 
 
 def food(_, update) -> None:
     update.message.reply_text(food_scraper.serve(), parse_mode=telegram.ParseMode.MARKDOWN)
 
 
-def chuck(_, update, args) -> None:
-    response = requests.get(CHUCK_API).json()
-    joke = response["value"]  # type: str
-    if args:
-        if len(args) > 0:
-            joke = CHUCK.sub(args[0].capitalize(), joke)
-        if len(args) > 1:
-            joke = NORRIS.sub(args[1].capitalize(), joke)
-    if joke:
-        update.message.reply_text(joke)
+def joke(_, update, args) -> None:
+    update.message.reply_text(make_joke_about(args))
 
 
 def kudos(bot, update) -> None:
@@ -69,15 +46,12 @@ def version(_, update) -> None:
 def main():
     updater.dispatcher.add_handler(CommandHandler('hello', hello))
     updater.dispatcher.add_handler(CommandHandler('version', version))
-    updater.dispatcher.add_handler(CommandHandler('mozartize', mozartize_sentence, pass_args=True))
+    updater.dispatcher.add_handler(CommandHandler('mozartize', mozartize, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('aehxtend', aehxtend, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('food', food))
-    updater.dispatcher.add_handler(CommandHandler('joke', chuck, pass_args=True))
+    updater.dispatcher.add_handler(CommandHandler('joke', joke, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('kudos', kudos))
     updater.dispatcher.add_handler(CommandHandler('exmatrikulieren', remove_from_th, pass_args=True))
-
-    job_queue = updater.job_queue
-
     updater.start_polling()
     updater.idle()
 
