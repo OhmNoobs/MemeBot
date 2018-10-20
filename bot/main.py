@@ -107,4 +107,4 @@ if __name__ == '__main__':
 
     updater = Updater(bot_token)
 
-    main(updater)
+    main()
