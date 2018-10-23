@@ -3,7 +3,7 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from typing import NamedTuple, List
 from pathlib import Path
-from helper import text_wrap
+from helper import text_wrap, ROOT_DIR
 
 
 class Arguments(NamedTuple):
@@ -26,12 +26,12 @@ class UsedFonts(NamedTuple):
     hand_writing_small: ImageFont.FreeTypeFont
 
 
-resources_path = Path("resources")
-canvas_image_path = resources_path / "images" / "removal_form.png"
-fonts_path = resources_path / "fonts"
+resources_path = Path(ROOT_DIR) / "resources"
+PATH_TO_CANVAS_IMAGE = resources_path / "images" / "removal_form.png"
+fonts_path = (resources_path / "fonts")
 roboto_font_face = str(fonts_path / "Roboto-Regular.ttf")
 dawning_of_a_new_day_font_face = str(fonts_path / "DawningofaNewDay.ttf")
-fonts = UsedFonts(
+FONTS = UsedFonts(
     ImageFont.truetype(roboto_font_face, 16),
     ImageFont.truetype(dawning_of_a_new_day_font_face, 22),
     ImageFont.truetype(dawning_of_a_new_day_font_face, 18)
@@ -63,7 +63,7 @@ def prepare_arguments(args: List[str]) -> Arguments:
 
 
 def compose_image(args: Arguments) -> Image.Image:
-    image = Image.open(canvas_image_path)
+    image = Image.open(PATH_TO_CANVAS_IMAGE)
     drawing = ImageDraw.Draw(image)
     text_fields = build_texts(args)
     draw_text(args, drawing, text_fields)
@@ -71,7 +71,7 @@ def compose_image(args: Arguments) -> Image.Image:
 
 
 def build_texts(args) -> TextFields:
-    reason_multi_line = text_wrap(args.reason, fonts.hand_writing_small, 563)
+    reason_multi_line = text_wrap(args.reason, FONTS.hand_writing_small, 563)
     return TextFields(
         "\n".join(reason_multi_line[:2]),
         date.today().strftime("%d.%m.%Y"),
@@ -82,13 +82,13 @@ def build_texts(args) -> TextFields:
 
 
 def draw_text(args, drawing, text_fields) -> None:
-    drawing.text((120, 90), args.last_name, (0, 0, 0), font=fonts.sans_serif)
-    drawing.text((420, 90), args.surname, (0, 0, 0), font=fonts.sans_serif)
-    drawing.text((420, 210), text_fields.date_numbers_long, (0, 0, 0), font=fonts.sans_serif)
-    drawing.text((170, 360), text_fields.date_numbers_short, (0, 0, 0), font=fonts.sans_serif)
-    drawing.text((420, 759), text_fields.first_and_last_name, (0, 81, 158), font=fonts.hand_writing)
-    drawing.text((40, 635), text_fields.reason_formatted, (0, 81, 158), font=fonts.hand_writing_small)
-    drawing.text((40, 773), text_fields.date_formal, (0, 81, 158), font=fonts.hand_writing_small)
+    drawing.text((120, 90), args.last_name, (0, 0, 0), font=FONTS.sans_serif)
+    drawing.text((420, 90), args.surname, (0, 0, 0), font=FONTS.sans_serif)
+    drawing.text((420, 210), text_fields.date_numbers_long, (0, 0, 0), font=FONTS.sans_serif)
+    drawing.text((170, 360), text_fields.date_numbers_short, (0, 0, 0), font=FONTS.sans_serif)
+    drawing.text((420, 759), text_fields.first_and_last_name, (0, 81, 158), font=FONTS.hand_writing)
+    drawing.text((40, 635), text_fields.reason_formatted, (0, 81, 158), font=FONTS.hand_writing_small)
+    drawing.text((40, 773), text_fields.date_formal, (0, 81, 158), font=FONTS.hand_writing_small)
 
 
 def get_as_bytes_io(image) -> BytesIO:

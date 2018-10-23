@@ -1,12 +1,19 @@
-from helper import fortune_is_willing
-from typing import List
+from helper import fortune_is_willing, Sentence
 
 
 class Aehxtender:
 
-    def __init__(self, arguments: List[str]):
-        self.sentence = ' '.join(arguments)
+    """Aehxtends a sentence by randomly adding äh's to it.
+
+    This is achieved by iterating over the sentence letter by letter. Each character has a chance of spawning an
+    aehxtension. Depending on the position in the sentence the aehxtension will be partially or fully padded by
+    hyphens or not.
+    """
+
+    def __init__(self, sentence: Sentence):
+        self.sentence = str(sentence)
         self.current_position = 0
+        self.length_of_last_aehxtension = 0
 
     def get_aehxtended(self) -> str:
         while self.current_position < len(self.sentence):
@@ -15,16 +22,20 @@ class Aehxtender:
 
     def randomly_aehxtend(self) -> None:
         if fortune_is_willing(12):
-            self.aehxtend_at_current_position()
-            self.current_position = self.current_position + 4  # length of one aehxtension
+            length_of_extension = self.aehxtend_at_current_position()
+            self.current_position = self.current_position + length_of_extension
         else:
             self.current_position += 1
 
-    def aehxtend_at_current_position(self) -> None:
+    def aehxtend_at_current_position(self) -> int:
+        aehxtension = self.build_aehxtension()
+        self.sentence = self.sentence[:self.current_position] + aehxtension + self.sentence[self.current_position:]
+        return len(aehxtension)
+
+    def build_aehxtension(self):
         pre_padding = self.decide_on_pre_padding()
         post_padding = self.decide_on_post_padding()
-        aehxtension = f"{pre_padding}äh{post_padding}"
-        self.sentence = self.sentence[:self.current_position] + aehxtension + self.sentence[self.current_position:]
+        return f"{pre_padding}äh{post_padding}"
 
     def decide_on_pre_padding(self) -> str:
         return '' if self.at_start_of_sentence() or self.at_beginning_of_word() or self.hyphen_before() else '-'

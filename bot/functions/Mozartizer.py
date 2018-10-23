@@ -1,11 +1,10 @@
-from helper import fortune_is_willing
-from typing import List
+from helper import fortune_is_willing, Sentence
 
 
 class Mozartizer:
 
-    def __init__(self, sentence: List[str]):
-        self.sentence = sentence
+    def __init__(self, sentence: Sentence):
+        self.sentence = str(sentence)
         self.mozartized_sentence = []
 
     def mozartize(self) -> str:

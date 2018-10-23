@@ -6,10 +6,11 @@ import telegram
 from functions import food_scraper
 from logging import handlers
 from functions.Mozartizer import Mozartizer
-from functions.aehxtender import Aehxtender
+from functions.Aehxtender import Aehxtender
 from telegram.ext import Updater, CommandHandler
 from functions.th_remover import remove_from_th
 from functions.joke import make_joke_about
+from helper import Sentence
 
 
 VERSION = "refactored"
@@ -20,11 +21,11 @@ def hello(_, update) -> None:
 
 
 def mozartize(_, update, args) -> None:
-    update.message.reply_text(Mozartizer(args).mozartize())
+    update.message.reply_text(Mozartizer(Sentence(args)).mozartize())
 
 
 def aehxtend(_, update, args) -> None:
-    update.message.reply_text(Aehxtender(args).get_aehxtended())
+    update.message.reply_text(Aehxtender(Sentence(args)).get_aehxtended())
 
 
 def food(_, update) -> None:
