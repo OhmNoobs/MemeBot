@@ -28,6 +28,9 @@ def fetch_food() -> list:
 def dish_up(food) -> str:
     feast = ""
     for meal in food:
+        if not meal:
+            log.error("Food could not be matched")
+            return "Zum Glück gibt's immer Döner..."
         meal_name = meal.group('meal_name').replace('<sup><b>', '_').replace('</b></sup>', '_')
         feast += f"{meal.group('meal_number')}. {meal_name} *{meal.group('meal_price_student')}*{NEW_LINE_SEPARATOR}"
     return feast[:-len(NEW_LINE_SEPARATOR)]
