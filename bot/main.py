@@ -37,7 +37,8 @@ def joke(_, update, args) -> None:
 
 
 def kudos(bot, update) -> None:
-    pass
+    lel = update.message.parse_entities()
+    print(lel)
 
 
 def version(_, update) -> None:
