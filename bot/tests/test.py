@@ -1,15 +1,13 @@
 import random
 import string
 import unittest
-from PIL import ImageFont
 
 from functions.Aehxtender import Aehxtender
 from functions.th_remover import text_wrap, FONTS
-from helper import Sentence
+from helper import Sentence, ROOT_DIR
+from pathlib import Path
 
-
-def generate_random_word():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(1, 20)))
+RESOURCES = Path(ROOT_DIR) / "tests" / "resources"
 
 
 class TestTextWrap(unittest.TestCase):
@@ -43,6 +41,10 @@ class TestTextWrap(unittest.TestCase):
         self.assertEqual(2, len(wrapped))
 
 
+def generate_random_word():
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(1, 20)))
+
+
 class TestAehxtender(unittest.TestCase):
 
     empty_sentence = Sentence([""])
@@ -69,7 +71,16 @@ class TestAehxtender(unittest.TestCase):
         aehxtender = Aehxtender(self.double_hyphen)
         length_of_aehxtension = aehxtender.aehxtend_at_current_position()
         aehxtender.current_position += length_of_aehxtension
-        # no luck (single aehxtension)
-        aehxtender.current_position += 1
+        aehxtender.current_position += 1  # no luck (single aehxtension)
         aehxtender.aehxtend_at_current_position()
         self.assertEqual("äh-äh-", aehxtender.sentence)
+
+
+class TestFoodScraper(unittest.TestCase):
+
+    def test_cached_food_pages(self):
+        cached_pages_paths = RESOURCES.glob('food_page_*.txt')
+        for path in cached_pages_paths:
+            pass
+        self.assertTrue(True)
+

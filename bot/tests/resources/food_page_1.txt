@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Get page title : Defined in functions.php -->
+  <title>Cafeteria "Come IN" Hohfederstraße Nürnberg &raquo Studentenwerk Erlangen-Nürnberg</title>
+
+  <!-- Bootstrap Core CSS -->
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"><!-- Bootstrap -->
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"><!-- FontAwesome -->
+
+  <!-- Add custom CSS here -->
+  <link href="http://www.werkswelt.de/theme/PureBootstrap/assets/css/custom.css" rel="stylesheet">
+
+  <!-- Bootswatch Theme : Change this to your choice of theme -->
+  <!-- Visit http://bootswatch.com/ to preview the themes available -->
+  <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/flatly/bootstrap.min.css" rel="stylesheet">
+
+  <!-- HTML5 Compatibility for Internet Explorer < 9 -->
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <!-- PNG Transparency Fix for Internet Explorer < 7 -->
+	<!--[if lt IE 7 ]>
+    <script src="http://www.werkswelt.de/theme/PureBootstrap/assets/js/dd_belatedpng.js"></script>
+    <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
+  <![endif]-->
+
+
+
+
+   <!-- JQUERY NEU -->
+
+  <meta name="keywords" content="getsimple, easy, content management system" />
+<link rel="canonical" href="http://www.werkswelt.de/" />
+    <script type="text/javascript" src="http://www.werkswelt.de/plugins/i18n_gallery/js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="http://www.werkswelt.de/plugins/i18n_gallery/js/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="http://www.werkswelt.de/plugins/i18n_gallery/js/jquery.prettyPhoto.js"></script>
+    <link rel="stylesheet" href="http://www.werkswelt.de/plugins/i18n_gallery/css/prettyPhoto.css" type="text/css" media="screen" charset="utf-8" />
+
+
+
+  <!-- include Google Feed API -->
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+
+  <!-- HEADER Plugin Hook -->
+
+  <link rel="canonical" href="http://www.werkswelt.de/index.php?id=hohf" />
+	<link href="//www.werkswelt.de/admin/template/js/fancybox/jquery.fancybox.css?v=2.0.4" rel="stylesheet" media="screen">
+	<script src="//www.werkswelt.de/admin/template/js/fancybox/jquery.fancybox.pack.js?v=2.0.4"></script>
+	<script src="http://www.werkswelt.de/plugins/FancyBoxPlugin/js/FancyBoxConfig.js?v=1.1"></script>
+<link href="http://www.werkswelt.de/plugins/cbcontact/form/cbcontact.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  <!-- Favicons: -->
+
+  <link rel="shortcut icon" href="favicon.ico">
+
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ff0000">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+
+</head>
+
+
+
+<body id="hohf">
+
+
+  <!-- CSS code from Bootply.com editor / Sorgt dafür, dass die Navbar zum richtigen Breaking point "collapsed" -->
+
+        <style type="text/css">
+            @media (max-width: 991px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    /* since 3.1.0 */
+    .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+    .collapsing {
+        overflow: hidden!important;
+    }
+}
+        </style>
+
+
+
+<!-- Unsichtbarer Link, den aber Screenreader vorlesen, mit dem sich die Navigation überspringen und gleich auf den Hauptteil der Seite wechseln lässt (mittlere Spalte) -->
+<p class="unsichtbar"><a href="#inhalt">Navigation überspringen</a></p>
+
+
+
+
+  <!-- START Navigation -->
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+
+<!-- Logo, das bei Viewport xs angezeigt wird:-->
+	   <div class="visible-xs" align="left"><a href="?id=index"><img src="data/uploads/logo-mobile.jpg" width="160px" title="Logo des Studentenwerks Erlangen-Nürnberg" style="float: left;PADDING-TOP: 5px ;PADDING-LEFT: 13px ; padding-bottom: 0px" ></img></a>
+      </div>
+	  <!-- ENDE Logo-->
+
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+
+          <span class="sr-only">Toggle Navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+
+      </div>
+
+      <!-- Get navigation items : Defined in functions.php -->
+      <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <ul class="nav navbar-nav">
+          <li class="index"><a href="http://www.werkswelt.de/">Aktuell</a></li><li class="gastronomie dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Gastronomie<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://www.werkswelt.de/index.php?id=gastronomie">Gastronomie</a></li><li class="divider"></li><li><a href="http://www.werkswelt.de/index.php?id=mensen-cafeterien-cafebars">Mensen &#38; Cafeterien (Speisepläne)</a></li><li><a href="http://www.werkswelt.de/index.php?id=kartensystem">Kartensystem</a></li><li><a href="http://www.werkswelt.de/index.php?id=nachhaltigkeit">Unsere Grunds&auml;tze</a></li><li><a href="http://www.werkswelt.de/index.php?id=mensavital">MensaVital</a></li><li><a href="http://www.werkswelt.de/index.php?id=veranstaltungen">Veranstaltungsservice</a></li><li><a href="http://www.werkswelt.de/index.php?id=oeffnungszeitensemesterferien">Info Öffnungszeiten</a></li><li><a href="http://www.werkswelt.de/index.php?id=ausschreibungen">Ausschreibungen</a></li><li><a href="http://www.werkswelt.de/index.php?id=kontakt">Kontakt</a></li></ul></li><li class="wohnen dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Wohnen<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://www.werkswelt.de/index.php?id=wohnen">Wohnen</a></li><li class="divider"></li><li><a href="http://www.werkswelt.de/index.php?id=wohnungssuche">Wohnungssuche</a></li><li><a href="http://www.werkswelt.de/index.php?id=tipps-fuer-erstsemester">Tipps f&uuml;r Erstsemester</a></li><li><a href="http://www.werkswelt.de/index.php?id=privatzimmervermittlung">Privatzimmervermittlung</a></li><li><a href="http://www.werkswelt.de/index.php?id=wohnen-bei-uns">Wohnen bei uns</a></li><li><a href="http://www.werkswelt.de/index.php?id=wohndauer">Wohndauer</a></li><li><a href="http://www.werkswelt.de/index.php?id=infos-zur-sok-aufnahme">Infos zur  SOK-Aufnahme</a></li><li><a href="http://www.werkswelt.de/index.php?id=umweltschutz">Umweltschutz</a></li><li><a href="http://www.werkswelt.de/index.php?id=wohnservice">WohnService (Kontakt)</a></li><li><a href="http://www.werkswelt.de/index.php?id=online-bewerbung">Online-Bewerbung</a></li><li><a href="http://www.werkswelt.de/index.php?id=formulare">Formulare</a></li><li><a href="http://www.werkswelt.de/index.php?id=bau-und-technik">Bau &amp; Technik</a></li><li><a href="http://www.werkswelt.de/index.php?id=wohnen-ausschreibungen">Ausschreibungen</a></li></ul></li><li class="bafoeg dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">BAföG<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://www.werkswelt.de/index.php?id=bafoeg">BAföG</a></li><li class="divider"></li><li><a href="http://www.werkswelt.de/index.php?id=amt-fuer-ausbildungsfoerderung">Amt für Ausbildungsförderung</a></li><li><a href="http://www.werkswelt.de/index.php?id=studienabschlussdarlehen">Studienabschlussdarlehen</a></li><li><a href="http://www.werkswelt.de/index.php?id=einmaldarlehen-der-darlehenskasse-bayern">Einmaldarlehen der Darlehenskasse Bayern</a></li></ul></li><li class="kultur dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Kultur<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://www.werkswelt.de/index.php?id=kultur">Kultur</a></li><li class="divider"></li><li><a href="http://www.werkswelt.de/index.php?id=musenhaeppchen">Musenh&auml;ppchen</a></li><li><a href="http://www.werkswelt.de/index.php?id=thank-god-its-friday">Thank God it&#039;s Friday</a></li><li><a href="http://www.werkswelt.de/index.php?id=raumuberlassung">Raum&uuml;berlassung</a></li><li><a href="http://www.werkswelt.de/index.php?id=kontakt-2">Kontakt</a></li></ul></li><li class="studieren-mit-kind dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Studieren mit Kind<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://www.werkswelt.de/index.php?id=studieren-mit-kind">Studieren mit Kind</a></li><li class="divider"></li><li><a href="http://www.werkswelt.de/index.php?id=kitas">Kindertagesst&auml;tten</a></li><li><a href="http://www.werkswelt.de/index.php?id=tagescafe">Tagescafé</a></li><li><a href="http://www.werkswelt.de/index.php?id=kinderteller">Kinderteller</a></li></ul></li><li class="service-beratung dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Service &#38; Beratung<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://www.werkswelt.de/index.php?id=service-beratung">Service &#38; Beratung</a></li><li class="divider"></li><li><a href="http://www.werkswelt.de/index.php?id=ppb">Psychologisch-Psychotherapeutische Beratungsstelle</a></li><li><a href="http://www.werkswelt.de/index.php?id=sozialberatung">Sozialberatung</a></li><li><a href="http://www.werkswelt.de/index.php?id=kfw-studienkredit-1">KfW-Studienkredit</a></li><li><a href="http://www.werkswelt.de/index.php?id=rechtsberatung">Rechtsberatung</a></li><li><a href="http://www.werkswelt.de/index.php?id=information-vor-ort">Information vor Ort</a></li><li><a href="http://www.werkswelt.de/index.php?id=werksweiser">WERKsWeiser</a></li></ul></li><li class="ueber-uns dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Über uns<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://www.werkswelt.de/index.php?id=ueber-uns">Über uns</a></li><li class="divider"></li><li><a href="http://www.werkswelt.de/index.php?id=betreuungsbereich">Betreuungsbereich</a></li><li><a href="http://www.werkswelt.de/index.php?id=internationale-partnerschaften">Internationale Partnerschaften</a></li><li><a href="http://www.werkswelt.de/index.php?id=verbande">Verb&auml;nde</a></li><li><a href="http://www.werkswelt.de/index.php?id=wir-unterstutzen">Wir unterst&uuml;tzen</a></li><li><a href="http://www.werkswelt.de/index.php?id=studentenwerkbeitrag">Studentenwerkbeitrag</a></li><li><a href="http://www.werkswelt.de/index.php?id=satzungen-fur-die-steuerbegunstigten-betriebe-gewerblicher-art">Satzungen f&uuml;r die steuerbeg&uuml;nstigten Betriebe gewerblicher Art</a></li><li><a href="http://www.werkswelt.de/index.php?id=beitragssatzungen">Beitragssatzungen</a></li><li><a href="http://www.werkswelt.de/index.php?id=gleichstellung-von-frauen-und-mannern-1">Gleichstellung von Frauen und M&auml;nnern</a></li><li><a href="http://www.werkswelt.de/index.php?id=datenschutzbeauftragter">Datenschutzbeauftragter</a></li><li><a href="http://www.werkswelt.de/index.php?id=jobs">Stellenangebote</a></li></ul></li>        </ul>
+      </div>
+
+    </div>
+  </div>
+  <!-- END Navigation -->
+
+  <div class="visible-xs" align="left"> <br></div>
+
+
+
+
+
+<!-- Script um auf dieser Template die Galerie "News" herholen zu KÖNNEN -->
+
+    <script type="text/javascript" src="http://www.werkswelt.de/plugins/i18n_gallery/js/jquery.nivo.slider.pack.js"></script>
+
+  <link rel="stylesheet" href="http://www.werkswelt.de/plugins/i18n_gallery/css/nivo-slider-default.css"/>
+  <link rel="stylesheet" href="http://www.werkswelt.de/plugins/i18n_gallery/css/nivo-slider.css"/>
+
+  <style>
+    /* The Nivo Slider styles (essential)*/
+    .nivoSlider { position:relative; width:100%; overflow: hidden; }
+    .nivoSlider img { position:absolute; top:0px; left:0px; max-width: none;}
+    .nivo-main-image { display: block !important; position: relative !important; width: 100% !important; }
+
+    /* If an image is wrapped in a link */
+    .nivoSlider a.nivo-imageLink {
+      position:absolute;
+      top:0px;
+      left:0px;
+      width:100%;
+      height:100%;
+      border:0;
+      padding:0;
+      margin:0;
+      z-index:6;
+      display:none;
+      background:white;
+      filter:alpha(opacity=0);
+      opacity:0;
+    }
+    /* The slices and boxes in the Slider */
+    .nivo-slice { display:block; position:absolute; z-index:5; height:100%; top:0; }
+    .nivo-box { display:block; position:absolute; z-index:5; overflow:hidden; }
+    .nivo-box img { display:block; }
+
+    /* other fixes */
+    .nivo-directionNav a {z-index:9;}
+  </style>
+  <script type="text/javascript">
+  $(window).load(function() {
+    $('#nivoSlider-news').nivoSlider({
+          effect: 'sliceDown',
+          slices: 15,
+          boxCols: 8,
+          boxRows: 4,
+
+          manualAdvance: false,
+          pauseTime: 11500,
+          pauseOnHover: false,
+          animSpeed: 500,
+
+          startSlide: 0,
+          randomStart: false,
+
+          directionNav: true,
+          prevText: 'Prev',
+          nextText: 'Next',
+          controlNav: false,
+          controlNavThumbs: false,
+
+          beforeChange: function() {          },
+          afterChange: function() {          },
+          slideshowEnd: function() {          },
+          lastSlide: function() {          },
+          afterLoad: function() {          }
+          })
+    });
+  </script>
+
+
+<!-- Facebook-Hook für Kulturbereich-->
+
+
+
+
+
+<!-- Linke Spalte -->
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 col-sm-3 sidebar">
+
+<!-- Die Sidebar-Komponenten werden geladen -->
+
+	   <!-- Stw-Logo -->
+
+ <div class="hidden-xs"><a href="?php get_site_url(); ?"><img src="data/uploads/test.png"  title="Logo des Studentenwerks Erlangen-Nürnberg" class="img-responsive" style="PADDING-BOTTOM: 5px ; PADDING-RIGHT: 0px ; PADDING-TOP: 18px ; PADDING-LEFT: px;" ></img></a><p class="subheadline">Wir versorgen Studierende<br> in Mittelfranken, Eichstätt und Ingolstadt</p>
+      </div>
+
+
+
+
+
+<div class="hidden-xs">
+<br>
+
+<div style="background-color:#ecf0f1; border-radius:4px; border: 0px; padding: 8px;">
+<strong>Quicklinks</strong>
+<br>
+
+<div class="dropdown">
+<a class="" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer;">
+Speisepläne
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+     <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=lmpl">E-Langemarckplatz</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=sued">E-Südmensa</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=isch">N-Insel Schütt</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=regb">N-Regensburger Straße</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=spau">N-St. Paul</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=mohm">N-Mensateria Ohm</a></li>
+<li role="presentation"><a role="menuitem" tabindex="-1" href="?id=cafeteria-veilstr">N-Veilhofstraße</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=hohf">N-Hohfederstraße</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=baer">N-Bärenschanzstraße</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=bingstrasse">N-Bingstraße</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=eich">Eichstätt</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=ingo">Ingolstadt</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=ansb">Ansbach</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?id=trie">Triesdorf</a></li>
+  </ul>
+</div>
+<div class="dropdown">
+<a class="" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer;">
+Projekte
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?tag=Semesterticket">Semesterticket</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?tag=Alexandrinum">Generalsanierung Alexandrinum</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?tag=Lange-Gasse">Sanierung Cafeteria Lange Gasse Nbg.</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="?tag=Südcampus">Wohnanlage Südcampus ER</a></li>
+	<li role="presentation"><a role="menuitem" tabindex="-1" href="?tag=Langemarckplatz">Generalsanierung Studentenhaus ER</a></li>
+<li role="presentation"><a role="menuitem" tabindex="-1" href="?tag=Avenarius">Wohnanlage Avenariusstraße</a></li>
+  </ul>
+</div>
+<a href="http://www.werkswelt.de/index.php?id=werksblitz">WERKsBlitz</a><br>
+
+<a href="http://www.werkswelt.de/index.php?id=stellenangebote">Stellenangebote</a><br>
+
+<div class="dropdown">
+<a class="" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer;">
+Ausschreibungen
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href=http://www.werkswelt.de/index.php?id=ausschreibungen>Hochschulgastronomie</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="http://www.werkswelt.de/index.php?id=wohnen-ausschreibungen">Wohnen, Bau und Technik</a></li>
+  </ul>
+</div>
+<a href="http://www.werkswelt.de/index.php?id=impressum">Impressum</a><br>
+</div>
+<hr>
+<strong>Aktuelles aus dem Bereich der Hochschulgastronomie:</strong> <br>
+
+  <a href="http://www.werkswelt.de/?post=aktionswochen-diy-mensa">Aktionswochen „DIY-Mensa: Koch dir dein Lieblingsgericht!“</a><br />
+  <em>23. Okt 2018</em><br />
+
+  <a href="http://www.werkswelt.de/?post=mensa-ingolstadt-verkurzte-offnungszeit-am-3110-geschlossen-am-211">Mensa Ingolstadt: verkürzte Öffnungszeit am 31.10., geschlossen am 2.11.</a><br />
+  <em>23. Okt 2018</em><br />
+
+  <a href="http://www.werkswelt.de/?post=veggie-zone-st-paul-ab-heute-wieder-geoffnet">Veggie Zone St. Paul ab heute wieder geöffnet</a><br />
+  <em>15. Okt 2018</em><br />
+
+<hr>
+
+</div>
+
+
+
+      </div>
+
+
+
+
+
+<!-- Mittlere Spalte -->
+      <div class="col-md-7 col-sm-7">
+
+
+<!-- Page Title anzeigen (+ Ankerlink für den unsichtbaren Link im Header) -->
+       <a name="inhalt" style="text-decoration: none"> <h4 class="page-header">Cafeteria "Come IN" Hohfederstraße Nürnberg</h4></a>
+
+
+
+<!-- Breadcrumbs laden, sofern die Seite nicht aktuell="index" ist -->
+<span class="hidden-xs">
+ 	 <ol class="breadcrumb">
+	  <a href="http://www.werkswelt.de/">Aktuell</a>
+	  &raquo;<span class="breadcrumb"><a href="http://www.werkswelt.de/index.php?id=gastronomie" title="Gastronomie">Gastronomie</a></span>&raquo;<span class="breadcrumb"><a href="http://www.werkswelt.de/index.php?id=mensen-cafeterien-cafebars" title="Mensen, Cafeterien &#38; Cafebars">Mensen &#38; Cafeterien (Speisepläne)</a></span>&raquo;<span class="breadcrumb"><a href="http://www.werkswelt.de/index.php?id=hohf" title="Cafeteria &#34;Come IN&#34; Hohfederstraße Nürnberg">Cafeteria &#34;Come IN&#34; Hohfederstraße Nürnberg</a></span>	 	</ol>
+
+	  </span>
+
+
+<!-- Die Seite, die im Newsmanager als News-Seite festgelegt ist, holt sich die Gallery "News". Beachte: nm_is_home bewirkt, dass sie nur auf Seite 1, nicht auf 2,3, etc. gezeigt wird-->
+
+
+
+<!-- Seiten Inhalt laden! Page Content -->
+       <p>Hohfederstra&szlig;e 40, 90489 N&uuml;rnberg</p>
+
+<div class="visible-xs"><a href="http://www.werkswelt.de/index.php?id=hohf&amp;setlang=de">deutsch</a> | <a href="http://www.werkswelt.de/index.php?id=hohf&amp;setlang=en">english</a></div>
+<div class="visible-xs"><p>ANZEIGE:</p>
+
+<p><img alt="" class="img-responsive" src="http://www.werkswelt.de/data/uploads/anzeigen/zc20185zeitschriftenanzeigeerlangen300dpi_web_quer.png" /></p>
+</div>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Speiseplan</title>
+
+  <!--CSS-->
+  <link href="localhost/theme/PureBootstrap/assets/css/custom.css" rel="stylesheet">
+</head>
+
+<body>
+<div style="background-color:#ecf0f1;border-radius: 4px 4px 0px 0px; padding: 8px;"">
+
+
+
+
+Speiseplan <br><h4>Freitag 26.10.2018</h4>Essen 1</br>MSC - Alaska-Seelachsfilet gebacken mit Zitrone <sup><b>[Wz,Fi]</b></sup> Remouladensoße <sup><b>[4,5,Wz,Ei,Mi]</b></sup></br>2,28&nbsp;€&nbsp;(Stud.)&nbsp;&nbsp; 3,28&nbsp;€&nbsp; (Bed.)&nbsp;&nbsp;     4,56&nbsp;€&nbsp; (Gäste)</br><img src='http://www.max-manager.de/daten-extern/sw-erlangen-nuernberg/icons/F.png?ts=1540505702' class='infomax-food-icon F' width='50' height='50' alt='food-icon'><img src='http://www.max-manager.de/daten-extern/sw-erlangen-nuernberg/icons/MSC.png?ts=1540505702' class='infomax-food-icon MSC' width='60' height='26' alt='food-icon'></br> </br>
+<form action="" method="post">
+<input type="submit" name="mybutton" class="btn btn-default btn-sm btn-speise" value="rückwärts" style='text-decoration: none; colo' disabled='disabled'>
+<button class="btn btn-default btn-sm btn" disabled="disabled"> | 26.10.2018 |</button>
+<input type="submit" name="mybutton" class="btn btn-default btn-sm btn-speise" value="vorwärts" style='text-decoration: none;' disabled='disabled'>
+</form>
+
+
+</div>
+</body>
+</html><div class="kasten">
+	<ol class="list-group" style="margin-bottom: 0px">
+		<li class="zusatzstoffe"><font line-height="10%" size="0,5"><img src="data/uploads/gastronomie/zutatenpics/schwein.png" class="gs_image" height="20" width="20" alt="S">&nbsp;=&nbsp;Schwein | <img src="data/uploads/gastronomie/zutatenpics/rind.png" class="gs_image" height="20" width="20" alt="R">&nbsp;=&nbsp;Rind |<img src="data/uploads/gastronomie/zutatenpics/gefluegel.png" class="gs_image" height="20" width="20" alt="G"> &nbsp;=&nbsp;Gefl&uuml;gel | <img src="data/uploads/gastronomie/zutatenpics/lamm.png" class="gs_image" height="20" width="20" alt="L">&nbsp;=&nbsp;Lamm | <img src="data/uploads/gastronomie/zutatenpics/wild.png" class="gs_image" height="20" width="20" alt="W">&nbsp;=&nbsp; Wild | <img src="data/uploads/gastronomie/zutatenpics/fische.png" class="gs_image" height="20" width="20" alt="F"> &nbsp;=&nbsp;Fisch | <img src="data/uploads/gastronomie/zutatenpics/vegetarisch.png" class="gs_image" height="20" width="20" alt="A"> &nbsp;=&nbsp;Vegetarisch | <img src="data/uploads/gastronomie/zutatenpics/vegan.png" class="gs_image" height="20" width="20" alt="Vegan">&nbsp;=&nbsp;Vegan  | <img src="data/uploads/gastronomie/zutatenpics/bio.png" class="gs_image" height="20" width="20" alt="Bio">&nbsp;=&nbsp;aus biologischem Anbau DE-&Ouml;KO-006 | <img src="data/uploads/gastronomie/zutatenpics/msc-fisch.png" class="gs_image" height="20" width="20" alt="MSC">&nbsp;=&nbsp;zertifizierte nachhaltige Fischerei - MSC - C - 51840 | <img src="data/uploads/gastronomie/zutatenpics/alkohol.png" class="gs_image" height="20" width="20" alt="F"> &nbsp;=&nbsp;mit Alkohol<br>
+1&nbsp;mit Farbstoff | 2&nbsp;mit Coffein | 4&nbsp;mit Konservierungsstoff | 5&nbsp;mit S&uuml;&szlig;ungsmittel | 7&nbsp;mit Antioxidationsmittel | 8&nbsp;mit Geschmacksverst&auml;rker | 9&nbsp;geschwefelt | 10&nbsp;geschw&auml;rzt | 12&nbsp;mit Phosphat | 13&nbsp;enth&auml;lt eine Phenylalaninquelle | 30&nbsp;mit Fettglasur <br>
+Allergene: Wz = Weizen(Dinkel,Kamut) | Ro = Roggen | Ge = Gerste | Hf = Hafer | Kr = Krebstiere | Ei = Eier | Er = Erdn&uuml;sse | So = Sojabohnen | Mi = Milch/Laktose | Man = Mandeln | Hs = Haseln&uuml;sse | Wa = Waln&uuml;sse | Ka = Kaschu(Cashew)n&uuml;sse | Pe = Pekann&uuml;sse | Pa = Paran&uuml;sse | Pi = Schalenfr&uuml;chte Pistazien | Mac = Macadamian&uuml;sse | Sel = Sellerie | Sen = Senf | Ses = Sesam | Su = Schwefeldioxid u. Sulfite | Lu = Lupinen | We = Weichtiere<br />
+			Die ausf&uuml;hrlichen kennzeichnungspflichtigen Allergene k&ouml;nnen sie auch den Aush&auml;ngen bzw. Auslagen entnehmen. Bei Fragen k&ouml;nnen Sie sich gerne an unsere Mitarbeiter/Innen wenden</font></li>
+	</ol>
+</div>
+
+<p>&nbsp;</p>
+
+<p><img alt="Innenansicht" src="http://www.werkswelt.de/data/uploads/gastronomie/cafe-n-hohfederstr.jpg" style="width: 48%;" />&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<table border="1" cellpadding="1" cellspacing="1" class="oeffnungszeiten">
+	<tbody>
+		<tr>
+			<td><strong>&Ouml;ffnungszeiten Semester</strong></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Mo - Do</td>
+			<td>7.45 - 15.45 Uhr</td>
+		</tr>
+		<tr>
+			<td>Fr</td>
+			<td>7.45 - 14:00 Uhr</td>
+		</tr>
+		<tr>
+			<td><strong>Semesterferien geschlossen vom</strong>:</td>
+			<td><strong>16.07. &ndash; 30.09.2018</strong></td>
+		</tr>
+	</tbody>
+</table>
+<!--
+<table border="1" cellpadding="1" cellspacing="1" class="oeffnungszeiten">
+	<tbody>
+		<tr>
+			<td><strong>&Ouml;ffnungszeiten Semesterferien:</strong></td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>30.01.2017 - 12.03.2017</td>
+			<td>
+				<p>geschlossen</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+-->
+
+<p>&nbsp;</p>
+
+<p><img alt="Leiterin" src="http://www.werkswelt.de/data/uploads/gastronomie/cafe-n-hohfederstr-jaeger.jpg" style="width: 113px; height: 150px;" /></p>
+
+<p><span style="line-height: 100%; font-size: 11px;">Leiterin Elena J&auml;ger</span></p>
+       </div>
+
+
+
+
+<!-- Rechte Spalte -->
+ <div class="col-md-2 col-sm-2 hidden-xs">
+
+
+<!-- Get the Sidebar right -->
+
+	   <br>
+<div align="left" style="padding-top:17px"><a href="http://www.werkswelt.de/index.php?id=hohf&amp;setlang=de">deutsch</a> | <a href="http://www.werkswelt.de/index.php?id=hohf&amp;setlang=en">english</a></div>
+<p><img alt="" src="http://www.werkswelt.de/data/uploads/anzeigen/vgn_banner_hoch_142x533px_ws-18-19.jpg" style="width: 142px; height: 533px;" /></p>
+<br><br>
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+	</div>
+
+
+
+
+<!-- DIVERSES -->
+
+<!-- Scroll to top Skript: -->
+ <p><a class="back-to-top" href="#">Back to Top</a></p>
+<script>
+jQuery(document).ready(function() {
+    var offset = 220;
+    var duration = 500;
+    jQuery(window).scroll(function() {
+        if (jQuery(this).scrollTop() > offset) {
+            jQuery('.back-to-top').fadeIn(duration);
+        } else {
+            jQuery('.back-to-top').fadeOut(duration);
+        }
+    });
+
+    jQuery('.back-to-top').click(function(event) {
+        event.preventDefault();
+        jQuery('html, body').animate({scrollTop: 0}, duration);
+        return false;
+    })
+});
+</script>
+
+
+
+
+
+  <footer>
+    <div class="container">
+      <hr>
+      <div class="row">
+        <div class="col-lg-12" text align="right">
+
+          <p><font size="2"><a href="?id=impressum" title="Impressum">Impressum</a> | <a href="?id=impressum#datenschutz" title="Datenschutzerkl&auml;rung">Datenschutzerkl&auml;rung</a></font></p>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Include the JavaScripts -->
+
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script><!-- Bootstrap Core -->
+  <script src="http://www.werkswelt.de/theme/PureBootstrap/assets/js/retina.min.js"></script><!-- RetinaJS by Imulus -->
+  <script src="http://www.werkswelt.de/theme/PureBootstrap/assets/js/bootstrapValidator.min.js"></script><!-- jQuery Validation -->
+
+
+
+
+
+</body>
+
+</html>
+
+
+
+
