@@ -1,7 +1,9 @@
+import io
 import random
 import string
 import unittest
 
+from functions import food_scraper
 from functions.Aehxtender import Aehxtender
 from functions.Exmatriculator import text_wrap, FONTS
 from helper import Sentence, ROOT_DIR
@@ -80,7 +82,21 @@ class TestFoodScraper(unittest.TestCase):
 
     def test_cached_food_pages(self):
         cached_pages_paths = PATH_TO_RESOURCES.glob('food_page_*.txt')
+        cached_results_paths = PATH_TO_RESOURCES.glob('food_page_*_expected.txt')
+
+        expected_results = []
+        for path in cached_results_paths:
+            with io.open(str(path), mode="r", encoding="utf-8") as result_file:
+                expected_results.append(result_file.read())
+
+        actual_results = []
         for path in cached_pages_paths:
-            pass
-        self.assertTrue(True)
+            with io.open(str(path), mode="r", encoding="utf-8") as soup_file:
+                soup = soup_file.read().replace('\r', '').replace('\n', '')
+                meals = food_scraper.cook_meals(soup)
+                feast = food_scraper.dish_up(meals)
+                actual_results.append(feast)
+
+        for expected_result, actual_result in zip(expected_results, actual_results):
+            self.assertEqual(expected_result, actual_result)
 

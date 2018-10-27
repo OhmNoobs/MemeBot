@@ -1,3 +1,5 @@
+from typing import List
+
 import requests
 import re
 import logging
@@ -8,11 +10,7 @@ log = logging.getLogger('')
 URL = 'http://www.werkswelt.de/?id=hohf'
 NEW_LINE_SEPARATOR = "\n\n"
 PLAN_PATTERN = re.compile("Speiseplan.*<form", re.MULTILINE)
-MEAL_PATTERN = re.compile(
-    "Essen (?P<meal_number>\d)</br>"
-    "(((?P<meal_name>.*?)</br>)|(</br>))"
-    "(?P<meal_price_student>.*?)&nbsp;.*?</br>"
-    "((?P<meal_image_tags><img.*?>)</br>|.*?</br>)")
+MEAL_PATTERN = re.compile("Essen (?P<meal_number>\d)</br>(((?P<meal_name>.*?)</br>)|(</br>))(?P<meal_price_student>.*?)&nbsp;.*?</br>((?P<meal_image_tags><img.*?>)</br>|)")
 PARSING_ERROR_MESSAGE = "Can't extract meals section from mensa website."
 
 
@@ -24,13 +22,6 @@ def order() -> str:
     return reply.replace('Döner', '[Döner](https://www.google.de/search?q=döner+sulzbacher+str.+nürnberg)')
 
 
-def fetch_soup() -> list:
-    page = requests.get(URL)
-    soup = page.text
-    soup = soup.replace('\r', '').replace('\n', '')
-    return soup
-
-
 def make_meal() -> str:
     soup = make_soup()
     try:
@@ -40,7 +31,7 @@ def make_meal() -> str:
         raise FoodProcessorError("Zum Glück gibt's immer Döner...")
 
 
-def make_soup():
+def make_soup() -> str:
     try:
         soup = fetch_soup()
     except ConnectionError as connection_error:
@@ -59,7 +50,14 @@ def make_soup():
     return soup
 
 
-def cook_meals(soup):
+def fetch_soup() -> str:
+    page = requests.get(URL)
+    soup = page.text
+    soup = soup.replace('\r', '').replace('\n', '')
+    return soup
+
+
+def cook_meals(soup: str) -> List[dict]:
     # throws attribute error if nothing found, slices out the relevant html
     match = PLAN_PATTERN.search(soup)
     if match:
@@ -70,7 +68,7 @@ def cook_meals(soup):
         raise ParsingError(PARSING_ERROR_MESSAGE)
 
 
-def dish_up(food) -> str:
+def dish_up(food: List[dict]) -> str:
     feast = ""
     for meal in food:
         meal_name = meal['meal_name'].replace('<sup><b>', '_').replace('</b></sup>', '_')
