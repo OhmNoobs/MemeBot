@@ -14,7 +14,8 @@ class Sentence:
         return ' '.join(self.word_list)
 
 
-def fortune_is_willing(probability=50) -> bool:
+def fortune_is_willing(probability=0.5) -> bool:
+    probability *= 100
     return random.randrange(0, 100) < probability
 
 

@@ -13,7 +13,7 @@ class Aehxtender:
     def __init__(self, sentence: Sentence):
         self.sentence = str(sentence)
         self.current_position = 0
-        self.length_of_last_aehxtension = 0
+        self.chance = 0.125
 
     def get_aehxtended(self) -> str:
         while self.current_position < len(self.sentence):
@@ -21,7 +21,7 @@ class Aehxtender:
         return self.sentence
 
     def randomly_aehxtend(self) -> None:
-        if fortune_is_willing(probability=12):
+        if fortune_is_willing(probability=self.chance):
             length_of_extension = self.aehxtend_at_current_position()
             self.current_position = self.current_position + length_of_extension
         else:
