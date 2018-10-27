@@ -15,6 +15,8 @@ class Sentence:
 
 
 def fortune_is_willing(probability=0.5) -> bool:
+    if 0 < probability > 1:
+        raise ValueError("Choose a value between 0 and 1")
     probability *= 100
     return random.randrange(0, 100) < probability
 

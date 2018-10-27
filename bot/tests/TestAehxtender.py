@@ -98,6 +98,6 @@ class TestAehxtender(unittest.TestCase):
         result = aehxtender.get_aehxtended()
         expected_number_of_aehxtensions = input_length * aehxtender.chance
         aehxtensions = result.count('äh')
-        delta = input_length * aehxtender.chance * 0.2
+        delta = input_length * aehxtender.chance * 0.5
         self.assertAlmostEqual(expected_number_of_aehxtensions, aehxtensions, delta=delta)
 
