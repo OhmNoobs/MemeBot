@@ -8,7 +8,7 @@ from logging import handlers
 from functions.Mozartizer import Mozartizer
 from functions.Aehxtender import Aehxtender
 from telegram.ext import Updater, CommandHandler
-from functions.th_remover import remove_from_th
+from functions.Exmatriculator import exmatriculate
 from functions.joke import make_joke_about
 from helper import Sentence
 
@@ -53,7 +53,7 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('food', food))
     updater.dispatcher.add_handler(CommandHandler('joke', joke, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('kudos', kudos))
-    updater.dispatcher.add_handler(CommandHandler('exmatrikulieren', remove_from_th, pass_args=True))
+    updater.dispatcher.add_handler(CommandHandler('exmatrikulieren', exmatriculate, pass_args=True))
     updater.start_polling()
     updater.idle()
 

@@ -38,7 +38,7 @@ FONTS = UsedFonts(
 )
 
 
-def remove_from_th(bot, update, args) -> None:
+def exmatriculate(bot, update, args) -> None:
     args = prepare_arguments(args)
     if args.surname == "":
         update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")

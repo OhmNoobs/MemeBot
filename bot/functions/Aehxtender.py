@@ -21,7 +21,7 @@ class Aehxtender:
         return self.sentence
 
     def randomly_aehxtend(self) -> None:
-        if fortune_is_willing(12):
+        if fortune_is_willing(probability=12):
             length_of_extension = self.aehxtend_at_current_position()
             self.current_position = self.current_position + length_of_extension
         else:
