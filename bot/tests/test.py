@@ -77,18 +77,33 @@ class TestAehxtender(unittest.TestCase):
         aehxtender.aehxtend_at_current_position()
         self.assertEqual("äh-äh-", aehxtender.sentence)
 
+    def test_end_of_word(self):
+        aehxtender = Aehxtender(self.single_word)
+        aehxtender.current_position = len(aehxtender.sentence)
+        aehxtender.aehxtend_at_current_position()
+        self.assertEqual("word-äh", aehxtender.sentence)
+
+    def test_double_aehxtension_at_end_of_word(self):
+        aehxtender = Aehxtender(self.single_word)
+        aehxtender.current_position = len(aehxtender.sentence)
+        length_of_aehxtension = aehxtender.aehxtend_at_current_position()
+        self.assertEqual(3, aehxtender.length_of_last_aehxtension, length_of_aehxtension)
+        aehxtender.aehxtend_at_current_position()
+        self.assertEqual("word-äh", aehxtender.sentence)
+
 
 class TestFoodScraper(unittest.TestCase):
 
     def test_cached_food_pages(self):
         cached_pages_paths = PATH_TO_RESOURCES.glob('food_page_*.txt')
-        cached_results_paths = PATH_TO_RESOURCES.glob('food_page_*_expected.txt')
+        cached_results_paths = PATH_TO_RESOURCES.glob('parsed_food_page_*.txt')
+        actual_results = self.fetch_actual_results(cached_pages_paths)
+        expected_results = self.fetch_expected_results(cached_results_paths)
+        for expected_result, actual_result in zip(expected_results, actual_results):
+            self.assertEqual(expected_result, actual_result)
 
-        expected_results = []
-        for path in cached_results_paths:
-            with io.open(str(path), mode="r", encoding="utf-8") as result_file:
-                expected_results.append(result_file.read())
-
+    @staticmethod
+    def fetch_actual_results(cached_pages_paths):
         actual_results = []
         for path in cached_pages_paths:
             with io.open(str(path), mode="r", encoding="utf-8") as soup_file:
@@ -96,7 +111,13 @@ class TestFoodScraper(unittest.TestCase):
                 meals = food_scraper.cook_meals(soup)
                 feast = food_scraper.dish_up(meals)
                 actual_results.append(feast)
+        return actual_results
 
-        for expected_result, actual_result in zip(expected_results, actual_results):
-            self.assertEqual(expected_result, actual_result)
+    @staticmethod
+    def fetch_expected_results(cached_results_paths):
+        expected_results = []
+        for path in cached_results_paths:
+            with io.open(str(path), mode="r", encoding="utf-8") as result_file:
+                expected_results.append(result_file.read())
+        return expected_results
 
