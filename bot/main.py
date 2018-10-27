@@ -13,7 +13,7 @@ from functions.joke import make_joke_about
 from helper import Sentence
 
 
-VERSION = "refactored"
+VERSION = "ES GIBT DÖNER!"
 
 
 def hello(_, update) -> None:
@@ -29,7 +29,7 @@ def aehxtend(_, update, args) -> None:
 
 
 def food(_, update) -> None:
-    update.message.reply_text(food_scraper.serve(), parse_mode=telegram.ParseMode.MARKDOWN)
+    update.message.reply_text(food_scraper.order(), parse_mode=telegram.ParseMode.MARKDOWN)
 
 
 def joke(_, update, args) -> None:
