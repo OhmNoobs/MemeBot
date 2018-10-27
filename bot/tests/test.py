@@ -3,7 +3,7 @@ import string
 import unittest
 
 from functions.Aehxtender import Aehxtender
-from functions.th_remover import text_wrap, FONTS
+from functions.Exmatriculator import text_wrap, FONTS
 from helper import Sentence, ROOT_DIR
 from pathlib import Path
 
