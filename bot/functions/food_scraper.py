@@ -5,18 +5,19 @@ import logging
 log = logging.getLogger('')
 URL = 'http://www.werkswelt.de/?id=hohf'
 NEW_LINE_SEPARATOR = "\n\n"
-PLAN_MATCHER = re.compile("Speiseplan.*")
+PLAN_MATCHER = re.compile("Speiseplan.*<form", re.MULTILINE)
 
 
 def fetch_soup() -> list:
     page = requests.get(URL)
     soup = page.text
-    return soup
+    soup = soup.replace('\r', '').replace('\n', '')
+    return soup[:-6]
 
 
 def cook_meals(haystack):
     # throws attribute error if nothing found, slices out the relevant html
-    haystack = PLAN_MATCHER.search(haystack).group(1)
+    haystack = PLAN_MATCHER.search(haystack).group(0)
     # Get food 1
     pattern = re.compile(
         "Speiseplan <br><h4>(.*?)</h4>Essen (?P<meal_number>\d)</br>"
@@ -37,9 +38,6 @@ def cook_meals(haystack):
 def dish_up(food) -> str:
     feast = ""
     for meal in food:
-        if not meal:
-            log.error("Food could not be matched")
-            return "Zum Glück gibt's immer Döner..."
         meal_name = meal.group('meal_name').replace('<sup><b>', '_').replace('</b></sup>', '_')
         feast += f"{meal.group('meal_number')}. {meal_name} *{meal.group('meal_price_student')}*{NEW_LINE_SEPARATOR}"
     return feast[:-len(NEW_LINE_SEPARATOR)]
