@@ -12,7 +12,7 @@ def fetch_soup() -> list:
     page = requests.get(URL)
     soup = page.text
     soup = soup.replace('\r', '').replace('\n', '')
-    return soup[:-6]
+    return soup
 
 
 def cook_meals(haystack):
@@ -20,19 +20,12 @@ def cook_meals(haystack):
     haystack = PLAN_MATCHER.search(haystack).group(0)
     # Get food 1
     pattern = re.compile(
-        "Speiseplan <br><h4>(.*?)</h4>Essen (?P<meal_number>\d)</br>"
-        "(((?P<meal_name>.*?)</br>)|(</br>))(?P<meal_price_student>.*?)"
-        "&nbsp;.*?</br>((?P<meal_image_tags><img.*?>)</br>|.*?</br>)")
-    match1 = pattern.search(haystack)
-    found_food_1 = match1.group()
-    split_pos = haystack.find(found_food_1)
-    haystack = haystack[split_pos + len(found_food_1):]
-    # Get food 2
-    pattern = re.compile(
-        "Essen (?P<meal_number>\d)</br>(((?P<meal_name>.*?)</br>)|(</br>))"
-        "(?P<meal_price_student>.*?)&nbsp;.*?</br>((?P<meal_image_tags><img.*?>)</br>|.*?</br>)")
-    match2 = pattern.search(haystack)
-    return [match1, match2]
+        "Essen (?P<meal_number>\d)</br>"
+        "(((?P<meal_name>.*?)</br>)|(</br>))"
+        "(?P<meal_price_student>.*?)&nbsp;.*?</br>"
+        "((?P<meal_image_tags><img.*?>)</br>|.*?</br>)")
+    matches = pattern.findall(haystack)
+    return matches
 
 
 def dish_up(food) -> str:
