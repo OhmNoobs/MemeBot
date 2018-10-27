@@ -7,7 +7,7 @@ from functions.Exmatriculator import text_wrap, FONTS
 from helper import Sentence, ROOT_DIR
 from pathlib import Path
 
-RESOURCES = Path(ROOT_DIR) / "tests" / "resources"
+PATH_TO_RESOURCES = Path(ROOT_DIR) / "tests" / "resources"
 
 
 class TestTextWrap(unittest.TestCase):
@@ -79,7 +79,7 @@ class TestAehxtender(unittest.TestCase):
 class TestFoodScraper(unittest.TestCase):
 
     def test_cached_food_pages(self):
-        cached_pages_paths = RESOURCES.glob('food_page_*.txt')
+        cached_pages_paths = PATH_TO_RESOURCES.glob('food_page_*.txt')
         for path in cached_pages_paths:
             pass
         self.assertTrue(True)
