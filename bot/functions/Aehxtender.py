@@ -10,10 +10,10 @@ class Aehxtender:
     hyphens or not.
     """
 
-    def __init__(self, sentence: Sentence):
+    def __init__(self, sentence: Sentence, chance=0.125):
         self.sentence = str(sentence)
         self.current_position = 0
-        self.chance = 0.125
+        self.chance = chance
 
     def get_aehxtended(self) -> str:
         while self.current_position < len(self.sentence):
