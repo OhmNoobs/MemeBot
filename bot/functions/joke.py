@@ -23,7 +23,7 @@ def make_joke_about(args: List[str]) -> str:
                 joke = NORRIS.sub(args[1].capitalize(), joke)
     else:
         if args:
-            joke_target = args.join(' ')
+            joke_target = ' '.join(args)
             joke = f"Da hat {joke_target} nochmal glück gehabt. Gibt grad keine Witze."
         else:
             joke = "Kein Witz :("
