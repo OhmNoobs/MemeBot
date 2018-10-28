@@ -18,7 +18,7 @@ def order() -> str:
     try:
         reply = make_meal()
     except FoodProcessorError as error:
-        reply = error
+        reply = str(error)
     return reply.replace('Döner', '[Döner](https://www.google.de/search?q=döner+sulzbacher+str.+nürnberg)')
 
 
@@ -77,4 +77,4 @@ def dish_up(food: List[dict]) -> str:
 
 
 if __name__ == '__main__':
-    print(make_meal())
+    print(order())
