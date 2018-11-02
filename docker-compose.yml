@@ -6,3 +6,4 @@ services:
     environment:
       - BOT_TOKEN=SUCH_SECRET_CHANGE_IN_OVERRIDE
     container_name: memebot
+    restart: always
