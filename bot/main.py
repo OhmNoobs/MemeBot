@@ -36,14 +36,6 @@ def joke(_, update, args) -> None:
     update.message.reply_text(make_joke_about(args))
 
 
-def kudos(bot, update) -> None:
-    entities = update.message.parse_entities()
-    for entity in entities:
-        if entity.type == 'mention':
-            kudo_reciever = entities[entity][1:]
-            pass
-
-
 def version(_, update) -> None:
     update.message.reply_text(VERSION)
 
