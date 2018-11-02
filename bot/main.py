@@ -47,7 +47,6 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('aehxtend', aehxtend, pass_args=True))
     updater.dispatcher.add_handler(CommandHandler('food', food))
     updater.dispatcher.add_handler(CommandHandler('joke', joke, pass_args=True))
-    updater.dispatcher.add_handler(CommandHandler('kudos', kudos))
     updater.dispatcher.add_handler(CommandHandler('exmatrikulieren', exmatriculate, pass_args=True))
     updater.start_polling()
     updater.idle()
