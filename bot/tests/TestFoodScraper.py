@@ -23,7 +23,8 @@ class TestFoodScraper(unittest.TestCase):
                 soup = soup_file.read().replace('\r', '').replace('\n', '')
                 meals = food_scraper.cook_meals(soup)
                 feast = food_scraper.dish_up(meals)
-                actual_results[int(soup_file.name[-5:-4])] = feast
+                test_number = TestFoodScraper.get_resource_number(soup_file.name)
+                actual_results[test_number] = feast
         return actual_results
 
     @staticmethod
@@ -31,5 +32,10 @@ class TestFoodScraper(unittest.TestCase):
         expected_results = {}
         for path in cached_results_paths:
             with io.open(str(path), mode="r", encoding="utf-8") as result_file:
-                expected_results[int(result_file.name[-5:-4])] = result_file.read()
+                test_number = TestFoodScraper.get_resource_number(result_file.name)
+                expected_results[test_number] = result_file.read()
         return expected_results
+
+    @staticmethod
+    def get_resource_number(filename):
+        return int(filename[-5:-4])
