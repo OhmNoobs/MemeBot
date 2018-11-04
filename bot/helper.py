@@ -1,14 +1,16 @@
 import os
 import random
-from typing import List
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class Sentence:
 
-    def __init__(self, list_of_words: List[str]):
-        self.word_list = list_of_words
+    def __init__(self, list_of_words):
+        if type(list_of_words) == str:
+            self.word_list = list_of_words.split(' ')
+        else:
+            self.word_list = list_of_words
 
     def __repr__(self):
         return ' '.join(self.word_list)
