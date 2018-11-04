@@ -4,7 +4,7 @@ from helper import fortune_is_willing, Sentence
 class Mozartizer:
 
     def __init__(self, sentence: Sentence):
-        self.sentence = str(sentence)
+        self.sentence = sentence.word_list
         self.mozartized_sentence = []
 
     def mozartize(self) -> str:
