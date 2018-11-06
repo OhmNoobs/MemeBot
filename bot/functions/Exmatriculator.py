@@ -1,7 +1,7 @@
 from datetime import date
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
-from typing import NamedTuple, List
+from typing import NamedTuple, List, Optional
 from pathlib import Path
 from helper import text_wrap, ROOT_DIR
 
@@ -38,14 +38,13 @@ FONTS = UsedFonts(
 )
 
 
-def exmatriculate(bot, update, args) -> None:
+def generate_exmatriculation(args) -> Optional[BytesIO]:
     args = prepare_arguments(args)
     if args.surname == "":
-        update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
         return
     image = compose_image(args)
     bio = get_as_bytes_io(image)
-    bot.send_photo(update.message.chat_id, photo=bio)
+    return bio
 
 
 def prepare_arguments(args: List[str]) -> Arguments:

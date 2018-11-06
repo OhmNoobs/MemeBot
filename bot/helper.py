@@ -1,7 +1,9 @@
 import os
 import random
 
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+VERSION = "Woooaaaahhhh dude!"
 
 
 class Sentence:
@@ -42,3 +44,12 @@ def text_wrap(text, font, max_width):
                 # when the line gets longer than the max width append it to new line.
                 lines.append(word + " ")
     return lines
+
+
+def get_bot_token():
+    try:
+        bot_token = os.environ['BOT_TOKEN']
+    except KeyError as e:
+        raise Exception("No bot token specified. Please provide one via environment variable 'BOT_TOKEN'.")
+    return bot_token
+
