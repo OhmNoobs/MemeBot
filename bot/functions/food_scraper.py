@@ -18,8 +18,8 @@ def order() -> str:
     try:
         reply = make_meal()
     except FoodProcessorError as error:
-        reply = str(error)
-    return reply.replace('Döner', '[Döner](https://www.google.de/search?q=döner+sulzbacher+str.+nürnberg)')
+        reply = str(error).replace('Döner', '[Döner](https://www.google.de/search?q=döner+sulzbacher+str.+nürnberg)')
+    return reply
 
 
 def make_meal() -> str:
@@ -71,7 +71,7 @@ def cook_meals(soup: str) -> List[dict]:
 def dish_up(food: List[dict]) -> str:
     feast = ""
     for meal in food:
-        meal_name = meal['meal_name'].replace('<sup><b>', '_').replace('</b></sup>', '_')
+        meal_name = meal['meal_name'].replace('<sup><b>', '_').replace('</b></sup>', '_').replace('`', "'")
         feast += f"{meal['meal_number']}. {meal_name} *{meal['meal_price_student']}*{NEW_LINE_SEPARATOR}"
     return feast[:-len(NEW_LINE_SEPARATOR)]
 
