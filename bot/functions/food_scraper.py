@@ -12,6 +12,13 @@ NEW_LINE_SEPARATOR = "\n\n"
 PLAN_PATTERN = re.compile("Speiseplan.*<form", re.MULTILINE)
 MEAL_PATTERN = re.compile("Essen (?P<meal_number>\d)</br>(((?P<meal_name>.*?)</br>)|(</br>))(?P<meal_price_student>.*?)&nbsp;.*?</br>((?P<meal_image_tags><img.*?>)</br>|)")
 PARSING_ERROR_MESSAGE = "Can't extract meals section from mensa website."
+DECORATION_INSTRUCTIONS = [
+    ("_", "\\_"),
+    ("*", "\\*"),
+    ("`", "\\`"),
+    ('<sup><b>', '_'),
+    ('</b></sup>', '_')
+]
 
 
 def order() -> str:
@@ -71,9 +78,15 @@ def cook_meals(soup: str) -> List[dict]:
 def dish_up(food: List[dict]) -> str:
     feast = ""
     for meal in food:
-        meal_name = meal['meal_name'].replace('<sup><b>', '_').replace('</b></sup>', '_').replace('`', "'")
+        meal_name = decorate_platter(meal['meal_name'])
         feast += f"{meal['meal_number']}. {meal_name} *{meal['meal_price_student']}*{NEW_LINE_SEPARATOR}"
     return feast[:-len(NEW_LINE_SEPARATOR)]
+
+
+def decorate_platter(meal: str) -> str:
+    for decoration_instruction in DECORATION_INSTRUCTIONS:
+        meal = meal.replace(*decoration_instruction)
+    return meal
 
 
 if __name__ == '__main__':
