@@ -33,6 +33,8 @@ def make_meal() -> str:
     soup = make_soup()
     try:
         food = cook_meals(soup)
+        if not food:
+            raise ParsingError("Heut gibt's nix.")
         return dish_up(food)
     except ParsingError:
         raise FoodProcessorError("Zum Glück gibt's immer Döner...")
