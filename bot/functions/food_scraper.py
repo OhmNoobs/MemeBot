@@ -1,9 +1,7 @@
-from typing import List
-
 import requests
 import re
 import logging
-
+from typing import List
 from exceptions import ConnectionProblem, ParsingError, FoodProcessorError
 
 log = logging.getLogger('')
