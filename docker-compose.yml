@@ -5,5 +5,6 @@ services:
     image: woop/memebot:latest
     environment:
       - BOT_TOKEN=SUCH_SECRET_CHANGE_IN_OVERRIDE
+      - TZ=Europe/Berlin
     container_name: memebot
     restart: always
