@@ -1,6 +1,6 @@
 import telegram
 
-from functions import food_scraper, inline_bot, Exmatriculator
+from functions import food_scraper, inline_bot, Exmatriculator, Notifier
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
@@ -41,3 +41,7 @@ def version(_, update) -> None:
 
 def inline_query(_, update) -> None:
     update.inline_query.answer(inline_bot.process(update))
+
+
+def notifier(_, update, job_queue) -> None:
+    update.message.reply_text(Notifier.manage_subscription(update.message.from_user, job_queue))
