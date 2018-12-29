@@ -1,5 +1,6 @@
 import os
 import random
+from typing import List
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -14,7 +15,7 @@ class Sentence:
         else:
             self.word_list = list_of_words
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return ' '.join(self.word_list)
 
 
@@ -25,7 +26,7 @@ def fortune_is_willing(probability=0.5) -> bool:
     return random.randrange(0, 100) < probability
 
 
-def text_wrap(text, font, max_width):
+def text_wrap(text, font, max_width) -> List[str]:
     lines = [""]
     if font.getsize(text)[0] <= max_width:
         lines[-1] = text
@@ -46,7 +47,7 @@ def text_wrap(text, font, max_width):
     return lines
 
 
-def get_bot_token():
+def get_bot_token() -> str:
     try:
         bot_token = os.environ['BOT_TOKEN']
     except KeyError as e:
