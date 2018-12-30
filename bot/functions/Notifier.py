@@ -35,23 +35,26 @@ exactly_1337_emoji = "🎮🍸🎪🐯💇🎥🐁🐳💴📲🕝💱🍆🍼�
                      "🔞📁💑🔀👋🌾🐵🐤🐢🏆💥🎇👌🔦🐠🕐🔒🐗🎊🌻💗📙🏥🎬🐯🍊📁🐑📼👪💏👪🏩💦🐫🔷🐴📑📩 "
 
 
-def manage_subscription(user: telegram.User, job_queue: JobQueue):
+def manage_subscription(user: telegram.User, job_queue: JobQueue) -> str:
     if user in user_jobs:
-        job = user_jobs.pop(user)
-        job.schedule_removal()
-        return "You won't be notified anymore."
+        return unsubscribe(user)
     else:
-        job = job_queue.run_daily(
-            callback=notify_subscriber,
-            time=THE_TIME,
-            context=user,
-            name="1337"
-        )
-        user_jobs[user] = job
-        return "You will be notified."
+        return subscribe(job_queue, user)
 
 
-def notify_subscriber(bot: Bot, job: Job):
+def subscribe(job_queue: JobQueue, user: telegram.User) -> str:
+    job = job_queue.run_daily(callback=notify_subscriber, time=THE_TIME, context=user, name="1337")
+    user_jobs[user] = job
+    return "You will be notified."
+
+
+def unsubscribe(user: telegram.User) -> str:
+    job = user_jobs.pop(user)
+    job.schedule_removal()
+    return "You won't be notified anymore."
+
+
+def notify_subscriber(bot: Bot, job: Job) -> None:
     user = job.context  # type: telegram.User
     text = "It is time.\n\n" + "".join(random.sample(exactly_1337_emoji, random.randint(13, 37)))
     bot.send_message(chat_id=user.id, text=text)
