@@ -4,7 +4,7 @@ from typing import List
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "Woooaaaahhhh dude!"
+VERSION = "BOY!"
 
 
 class Sentence:
