@@ -13,17 +13,17 @@ def process(update):
 
 
 def provide_results(aehxtended, mozartized):
-    aehxtender_result_article = InlineQueryResultArticle(
+    aehxtended_result = InlineQueryResultArticle(
         id=uuid4(),
         title="Ähxtend",
         description="Ähxtends your sentence!",
         input_message_content=InputTextMessageContent(aehxtended))
-    mozartizer_result_article = InlineQueryResultArticle(
+    mozartized_result = InlineQueryResultArticle(
         id=uuid4(),
         title="Mozartize",
         description="Get a mumbled version of your input.",
         input_message_content=InputTextMessageContent(mozartized))
-    return [aehxtender_result_article, mozartizer_result_article]
+    return [aehxtended_result, mozartized_result]
 
 
 def create_results(query):
