@@ -15,8 +15,10 @@ def make_joke_about(args: List[str]) -> str:
 
 def get_chuck_joke() -> Optional[str]:
     try:
-        response = requests.get(CHUCK_API)
+        response = requests.request(method='GET', url=CHUCK_API, timeout=5)
         response = response.json()["value"]
+    except requests.exceptions.Timeout:
+        response = "Can't think of a new joke right now."
     except requests.exceptions.RequestException or KeyError:
         response = None
     return response
