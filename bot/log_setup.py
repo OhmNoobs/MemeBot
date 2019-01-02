@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 from logging import handlers
+FIVE_MEGABYTE = 2**20 * 5
 
 
 def setup():
@@ -27,7 +28,7 @@ def setup_working_directory():
 
 
 def add_file_handler(formatter, the_log) -> None:
-    fh = handlers.RotatingFileHandler('meme_bot.log', maxBytes=(1048576 * 5), backupCount=7)
+    fh = handlers.RotatingFileHandler('meme_bot.log', maxBytes=FIVE_MEGABYTE, backupCount=7)
     fh.setFormatter(formatter)
     the_log.addHandler(fh)
 
