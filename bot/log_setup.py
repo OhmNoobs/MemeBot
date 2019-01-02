@@ -1,23 +1,18 @@
 import os
-import sys
 import logging
+import sys
 from logging import handlers
 FIVE_MEGABYTE = 2**20 * 5
-
-
-def setup():
-    the_log = init_logger()
-    return the_log
+FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 
 def init_logger() -> logging.Logger:
     setup_working_directory()
-    the_log = logging.getLogger('')
+    the_log = logging.getLogger('meme-bot')
     the_log.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    add_stream_handler(formatter, the_log)
-    add_file_handler(formatter, the_log)
-    logging.info('Started logging')
+    the_log.addHandler(add_stream_handler())
+    the_log.addHandler(add_file_handler())
+    the_log.info('Started logging')
     return the_log
 
 
@@ -27,13 +22,13 @@ def setup_working_directory():
     os.chdir(dir_name)
 
 
-def add_file_handler(formatter, the_log) -> None:
-    fh = handlers.RotatingFileHandler('meme_bot.log', maxBytes=FIVE_MEGABYTE, backupCount=7)
-    fh.setFormatter(formatter)
-    the_log.addHandler(fh)
+def add_file_handler() -> logging.FileHandler:
+    log_to_file = handlers.RotatingFileHandler('meme_bot.log', maxBytes=FIVE_MEGABYTE, backupCount=7)
+    log_to_file.setFormatter(FORMATTER)
+    return log_to_file
 
 
-def add_stream_handler(formatter, the_log) -> None:
-    ch = logging.StreamHandler(sys.stderr)
-    ch.setFormatter(formatter)
-    the_log.addHandler(ch)
+def add_stream_handler() -> logging.StreamHandler:
+    log_to_console = logging.StreamHandler(sys.stdout)
+    log_to_console.setFormatter(FORMATTER)
+    return log_to_console

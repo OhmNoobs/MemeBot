@@ -7,8 +7,11 @@ import log_setup
 
 def main():
     updater = Updater(helper.get_bot_token())
+    log.debug('Updater created')
     attach_handlers(updater.dispatcher)
+    log.debug('Handlers attached')
     updater.start_polling()
+    log.debug('Going into idle...')
     updater.idle()
 
 
@@ -30,5 +33,5 @@ def error_logger(_, update, error) -> None:
 
 
 if __name__ == '__main__':
-    log = log_setup.setup()
+    log = log_setup.init_logger()
     main()
