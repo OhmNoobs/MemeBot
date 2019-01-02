@@ -1,3 +1,4 @@
+import logging
 import random
 from datetime import time
 from typing import Dict
@@ -7,6 +8,7 @@ from telegram import Bot
 from telegram.ext import JobQueue, Job
 
 THE_TIME = time(hour=13, minute=37)
+log = logging.getLogger('meme-bot')
 user_jobs = {}  # type: Dict[telegram.User, Job]
 exactly_1337_emoji = "🎮🍸🎪🐯💇🎥🐁🐳💴📲🕝💱🍆🍼👱🕐🏇🏂💵🔍💤🔙🏡🍋🌑💣🐛🎿🍡🌹👀🎸🍟🗾🐘🐹🍎📪🐗🍲🕢🍂💡🎴🍲👫🔒👮🕖🕝🎑🌘🔃🐒" \
                      "🏈🔝🍭👈🔏🍋💍💇🕧🔟💶🎂🎐🏂💈🍋🍁💞🗾💍🔆📲👈💯🕠📉💙👻👕🔝🐽👂🎰🍌🔠🏈🕙🎨💫💀🏀👥🍒📠🕢🌛👮🍓🌞👬💸🍻🔜🌹" \
@@ -57,4 +59,8 @@ def unsubscribe(user: telegram.User) -> str:
 def notify_subscriber(bot: Bot, job: Job) -> None:
     user = job.context  # type: telegram.User
     text = "It is time.\n\n" + "".join(random.sample(exactly_1337_emoji, random.randint(13, 37)))
-    bot.send_message(chat_id=user.id, text=text)
+    try:
+        bot.send_message(chat_id=user.id, text=text)
+    except telegram.error.Unauthorized:
+        unsubscribe(user)
+        log.info('Someone blocked the bot but still had an active subscription. Unsubscribed him.')
