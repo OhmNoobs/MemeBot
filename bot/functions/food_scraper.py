@@ -4,7 +4,7 @@ import logging
 from typing import List
 from exceptions import ConnectionProblem, ParsingError, FoodProcessorError
 
-log = logging.getLogger('')
+log = logging.getLogger('meme-bot')
 URL = 'http://www.werkswelt.de/?id=hohf'
 NEW_LINE_SEPARATOR = "\n\n"
 PLAN_PATTERN = re.compile("Speiseplan.*<form", re.MULTILINE)
