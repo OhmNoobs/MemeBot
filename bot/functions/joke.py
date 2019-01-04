@@ -24,7 +24,7 @@ def get_chuck_joke() -> Optional[str]:
     return response
 
 
-def individualize(args, joke):
+def individualize(args: List[str], joke: str) -> str:
     if joke and args:
         joke = replace_chuck_with_args(args, joke)
     elif args and not joke:
@@ -35,7 +35,7 @@ def individualize(args, joke):
     return joke
 
 
-def replace_chuck_with_args(args, joke):
+def replace_chuck_with_args(args: List[str], joke: str) -> str:
     if len(args) > 0:
         joke = CHUCK.sub(args[0].capitalize(), joke)
     if len(args) > 1:

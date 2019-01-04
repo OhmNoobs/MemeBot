@@ -1,7 +1,6 @@
 import os
 import random
-from typing import List
-
+from typing import List, Union
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 VERSION = "BOY!"
@@ -9,7 +8,7 @@ VERSION = "BOY!"
 
 class Sentence:
 
-    def __init__(self, list_of_words):
+    def __init__(self, list_of_words: Union[str, list]):
         if type(list_of_words) == str:
             self.word_list = list_of_words.split(' ')
         else:

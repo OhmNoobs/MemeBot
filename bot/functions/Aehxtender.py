@@ -6,8 +6,7 @@ class Aehxtender:
     """Aehxtends a sentence by randomly adding äh's to it.
 
     This is achieved by iterating over the sentence letter by letter. Each character has a chance of spawning an
-    aehxtension. Depending on the position in the sentence the aehxtension will be partially or fully padded by
-    hyphens or not.
+    aehxtension. Depending on the position in the sentence the aehxtension can be partially or fully padded by hyphens.
     """
 
     def __init__(self, sentence: Sentence, chance=0.125):
@@ -32,7 +31,7 @@ class Aehxtender:
         self.sentence = self.sentence[:self.current_position] + aehxtension + self.sentence[self.current_position:]
         return len(aehxtension)
 
-    def build_aehxtension(self):
+    def build_aehxtension(self) -> str:
         pre_padding = self.decide_on_pre_padding()
         post_padding = self.decide_on_post_padding()
         return f"{pre_padding}äh{post_padding}"

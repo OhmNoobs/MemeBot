@@ -1,18 +1,20 @@
+from typing import List
 from uuid import uuid4
 
-from telegram import InlineQueryResultArticle, InputTextMessageContent
+from telegram import InlineQueryResultArticle, InputTextMessageContent, Update
 
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from helper import Sentence
 
 
-def process(update):
-    aehxtended, mozartized = create_results(update.inline_query.query)
+def process(update: Update) -> List[InlineQueryResultArticle]:
+    user_input = Sentence(update.inline_query.query)
+    aehxtended, mozartized = create_results(user_input)
     return provide_results(aehxtended, mozartized)
 
 
-def provide_results(aehxtended, mozartized):
+def provide_results(aehxtended: str, mozartized: str) -> List[InlineQueryResultArticle]:
     aehxtended_result = InlineQueryResultArticle(
         id=uuid4(),
         title="Ähxtend",
@@ -26,11 +28,11 @@ def provide_results(aehxtended, mozartized):
     return [aehxtended_result, mozartized_result]
 
 
-def create_results(query):
-    aehxtended = Aehxtender(Sentence(query)).get_aehxtended()
+def create_results(query: Sentence):
+    aehxtended = Aehxtender(query).get_aehxtended()
     if not aehxtended:
         aehxtended = 'äh'
-    mozartized = Mozartizer(Sentence(query)).mozartize()
+    mozartized = Mozartizer(query).mozartize()
     if not mozartized:
         mozartized = 'Mnmnmnnn'
     return aehxtended, mozartized
