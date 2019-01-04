@@ -46,8 +46,8 @@ def make_soup() -> str:
         raise ConnectionProblem("(ConnectionError) Ich kann den Koch nicht erreichen...")
     except requests.exceptions.HTTPError as http_error:
         log.error(http_error)
-        raise Exception("(HTTPError) Ich kann den Koch nicht verstehen... "
-                        "Hier ein bisschen shame 🔔, shame 🔔, shame 🔔 https://www.infomax.de/")
+        raise ConnectionProblem("(HTTPError) Ich kann den Koch nicht verstehen... "
+                                "Hier ein bisschen shame 🔔, shame 🔔, shame 🔔 https://www.infomax.de/")
     except requests.exceptions.Timeout as timeout:
         log.error(timeout)
         raise ConnectionProblem("(Timeout) Das dauert zu lange... Hol dir nen Döner.")
