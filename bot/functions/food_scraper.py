@@ -41,9 +41,6 @@ def make_meal() -> str:
 def make_soup() -> str:
     try:
         soup = fetch_soup()
-    except ConnectionError as connection_error:
-        log.error(connection_error)
-        raise ConnectionProblem("(ConnectionError) Ich kann den Koch nicht erreichen...")
     except requests.exceptions.HTTPError as http_error:
         log.error(http_error)
         raise ConnectionProblem("(HTTPError) Ich kann den Koch nicht verstehen... "
@@ -54,6 +51,9 @@ def make_soup() -> str:
     except requests.exceptions.TooManyRedirects as too_many_redirects:
         log.error(too_many_redirects)
         raise ConnectionProblem("(TooManyRedirects) Ach https://www.infomax.de/ ...")
+    except ConnectionError as connection_error:
+        log.error(connection_error)
+        raise ConnectionProblem("(ConnectionError) Ich kann den Koch nicht erreichen...")
     return soup
 
 
