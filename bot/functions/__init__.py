@@ -12,7 +12,7 @@ def hello(_, update) -> None:
 
 
 def start(_, update):
-    update.message.reply_text(START_HELP)
+    update.message.reply_text(f'Hi {update.message.from_user.first_name} ich kann folgendes: {START_HELP}.')
 
 
 def version(_, update) -> None:
