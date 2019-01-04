@@ -16,6 +16,7 @@ def main():
 
 
 def attach_handlers(dispatcher):
+    dispatcher.add_handler(CommandHandler('start', functions.start))
     dispatcher.add_handler(CommandHandler('hello', functions.hello))
     dispatcher.add_handler(CommandHandler('version', functions.version))
     dispatcher.add_handler(CommandHandler('mozartize', functions.mozartize, pass_args=True))

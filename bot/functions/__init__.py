@@ -4,11 +4,19 @@ from functions import food_scraper, inline_bot, Exmatriculator, Notifier
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
-from helper import Sentence, VERSION
+from helper import Sentence, VERSION, START_HELP
 
 
 def hello(_, update) -> None:
     update.message.reply_text(f'Hello {update.message.from_user.first_name}')
+
+
+def start(_, update):
+    update.message.reply_text(START_HELP)
+
+
+def version(_, update) -> None:
+    update.message.reply_text(VERSION)
 
 
 def mozartize(_, update, args) -> None:
@@ -17,6 +25,10 @@ def mozartize(_, update, args) -> None:
 
 def aehxtend(_, update, args) -> None:
     update.message.reply_text(Aehxtender(Sentence(args)).get_aehxtended())
+
+
+def inline_query(_, update) -> None:
+    update.inline_query.answer(inline_bot.process(update))
 
 
 def food(_, update) -> None:
@@ -33,14 +45,6 @@ def exmatriculate(bot, update, args) -> None:
         bot.send_photo(update.message.chat_id, photo=exmatriculation)
     else:
         update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
-
-
-def version(_, update) -> None:
-    update.message.reply_text(VERSION)
-
-
-def inline_query(_, update) -> None:
-    update.inline_query.answer(inline_bot.process(update))
 
 
 def notifier(_, update, job_queue) -> None:

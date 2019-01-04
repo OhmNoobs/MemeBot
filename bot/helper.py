@@ -4,6 +4,12 @@ from typing import List, Union
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 VERSION = "BOY!"
+START_HELP = """mozartize - Get a mozartized version of your input
+aehxtend - Get a ähxtended version of your input
+food - Get some food!
+exmatrikulieren - Generiert eine Exmatrikulation für arg1 arg2, arg3 ... argN ist der Grund.
+version - Get the version
+notify_me - Toggle notifications"""
 
 
 class Sentence:
