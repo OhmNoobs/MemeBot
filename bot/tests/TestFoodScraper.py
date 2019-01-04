@@ -10,13 +10,13 @@ class TestFoodScraper(unittest.TestCase):
     def test_cached_food_pages(self):
         cached_pages_paths = PATH_TO_RESOURCES.glob('food_page_*.txt')
         cached_results_paths = PATH_TO_RESOURCES.glob('parsed_food_page_*.txt')
-        actual_results = self.fetch_actual_results(cached_pages_paths)
-        expected_results = self.fetch_expected_results(cached_results_paths)
+        actual_results = self.generate_results(cached_pages_paths)
+        expected_results = self.read_expected_results(cached_results_paths)
         for i in range(1, len(actual_results)+1):
             self.assertEqual(actual_results[i], expected_results[i])
 
     @staticmethod
-    def fetch_actual_results(cached_pages_paths):
+    def generate_results(cached_pages_paths):
         actual_results = {}
         for path in cached_pages_paths:
             with io.open(str(path), mode="r", encoding="utf-8") as soup_file:
@@ -28,7 +28,7 @@ class TestFoodScraper(unittest.TestCase):
         return actual_results
 
     @staticmethod
-    def fetch_expected_results(cached_results_paths):
+    def read_expected_results(cached_results_paths):
         expected_results = {}
         for path in cached_results_paths:
             with io.open(str(path), mode="r", encoding="utf-8") as result_file:
