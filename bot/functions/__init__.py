@@ -43,7 +43,7 @@ def joke(_, update, args) -> None:
 def exmatriculate(bot, update, args) -> None:
     exmatriculation = Exmatriculator.generate_exmatriculation(args)
     if exmatriculation:
-        bot.send_photo(update.message.chat_id, photo=exmatriculation)
+        bot.send_photo(update.message.chat_id, photo=exmatriculation.form, caption=exmatriculation.description)
     else:
         update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
 

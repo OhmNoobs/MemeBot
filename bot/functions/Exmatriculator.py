@@ -6,7 +6,7 @@ from pathlib import Path
 from helper import text_wrap, ROOT_DIR
 
 
-class Arguments(NamedTuple):
+class ExmatriculationInformation(NamedTuple):
     surname: str
     last_name: str
     reason: str
@@ -26,6 +26,11 @@ class UsedFonts(NamedTuple):
     hand_writing_small: ImageFont.FreeTypeFont
 
 
+class Exmatriculation(NamedTuple):
+    form: BytesIO
+    description: str
+
+
 resources_path = Path(ROOT_DIR) / "resources"
 PATH_TO_CANVAS_IMAGE = resources_path / "images" / "removal_form.png"
 fonts_path = (resources_path / "fonts")
@@ -38,51 +43,51 @@ FONTS = UsedFonts(
 )
 
 
-def generate_exmatriculation(args) -> Optional[BytesIO]:
-    args = prepare_arguments(args)
-    if args.surname == "":
-        return
-    image = compose_image(args)
+def generate_exmatriculation(arguments) -> Optional[Exmatriculation]:
+    arguments = parse_input(arguments)
+    if not arguments:
+        return None
+    image = compose_image(arguments)
     bio = get_as_bytes_io(image)
-    return bio
+    return Exmatriculation(form=bio, description=f"Exmatrikulation für {arguments.surname} {arguments.last_name}")
 
 
-def prepare_arguments(args: List[str]) -> Arguments:
-    surname = ""
-    last_name = ""
-    reason = "Noob."
+def parse_input(args: List[str]) -> Optional[ExmatriculationInformation]:
     if len(args) > 0:
-        if len(args) > 0:
-            surname = args[0].capitalize()
+        last_name = ""
+        reason = "Noob."
+        surname = args[0].capitalize()
         if len(args) > 1:
             last_name = args[1].capitalize()
         if len(args) > 2:
             reason = " ".join(args[2:])
-    return Arguments(surname, last_name, reason)
+        return ExmatriculationInformation(surname, last_name, reason)
+    else:
+        return None
 
 
-def compose_image(args: Arguments) -> Image.Image:
+def compose_image(details: ExmatriculationInformation) -> Image.Image:
     image = Image.open(PATH_TO_CANVAS_IMAGE)
     drawing = ImageDraw.Draw(image)
-    text_fields = build_texts(args)
-    draw_text(args, drawing, text_fields)
+    text_fields = build_texts(details)
+    draw_text(details, drawing, text_fields)
     return image
 
 
-def build_texts(args) -> TextFields:
-    reason_multi_line = text_wrap(args.reason, FONTS.hand_writing_small, 563)
+def build_texts(details) -> TextFields:
+    reason_multi_line = text_wrap(details.reason, FONTS.hand_writing_small, 563)
     return TextFields(
         "\n".join(reason_multi_line[:2]),
         date.today().strftime("%d.%m.%Y"),
         date.today().strftime("%m/%Y"),
         "Nürnberg, " + date.today().strftime("%d. %B %Y"),
-        f"{args.surname} {args.last_name}"
+        f"{details.surname} {details.last_name}"
     )
 
 
-def draw_text(args, drawing, text_fields) -> None:
-    drawing.text((120, 90), args.last_name, (0, 0, 0), font=FONTS.sans_serif)
-    drawing.text((420, 90), args.surname, (0, 0, 0), font=FONTS.sans_serif)
+def draw_text(details, drawing, text_fields) -> None:
+    drawing.text((120, 90), details.last_name, (0, 0, 0), font=FONTS.sans_serif)
+    drawing.text((420, 90), details.surname, (0, 0, 0), font=FONTS.sans_serif)
     drawing.text((420, 210), text_fields.date_numbers_long, (0, 0, 0), font=FONTS.sans_serif)
     drawing.text((170, 360), text_fields.date_numbers_short, (0, 0, 0), font=FONTS.sans_serif)
     drawing.text((420, 759), text_fields.first_and_last_name, (0, 81, 158), font=FONTS.hand_writing)
