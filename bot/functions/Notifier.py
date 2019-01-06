@@ -8,7 +8,7 @@ from telegram import Bot
 from telegram.ext import JobQueue, Job
 
 THE_TIME = time(hour=13, minute=37)
-log = logging.getLogger('meme-bot')
+log = logging.getLogger()
 user_jobs = {}  # type: Dict[telegram.User, Job]
 exactly_1337_emoji = "🎮🍸🎪🐯💇🎥🐁🐳💴📲🕝💱🍆🍼👱🕐🏇🏂💵🔍💤🔙🏡🍋🌑💣🐛🎿🍡🌹👀🎸🍟🗾🐘🐹🍎📪🐗🍲🕢🍂💡🎴🍲👫🔒👮🕖🕝🎑🌘🔃🐒" \
                      "🏈🔝🍭👈🔏🍋💍💇🕧🔟💶🎂🎐🏂💈🍋🍁💞🗾💍🔆📲👈💯🕠📉💙👻👕🔝🐽👂🎰🍌🔠🏈🕙🎨💫💀🏀👥🍒📠🕢🌛👮🍓🌞👬💸🍻🔜🌹" \

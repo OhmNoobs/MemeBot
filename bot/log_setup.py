@@ -8,7 +8,7 @@ FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 
 def init_logger() -> logging.Logger:
     setup_working_directory()
-    the_log = logging.getLogger('meme-bot')
+    the_log = logging.getLogger()
     the_log.setLevel(logging.INFO)
     the_log.addHandler(add_stream_handler())
     the_log.addHandler(add_file_handler())
@@ -29,6 +29,6 @@ def add_file_handler() -> logging.FileHandler:
 
 
 def add_stream_handler() -> logging.StreamHandler:
-    log_to_console = logging.StreamHandler(sys.stdout)
+    log_to_console = logging.StreamHandler(sys.stderr)
     log_to_console.setFormatter(FORMATTER)
     return log_to_console

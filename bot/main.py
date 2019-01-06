@@ -7,11 +7,11 @@ import log_setup
 
 def main():
     updater = Updater(helper.get_bot_token())
-    log.debug('Updater created')
+    log.info('Updater created')
     attach_handlers(updater.dispatcher)
-    log.debug('Handlers attached')
+    log.info('Handlers attached')
     updater.start_polling()
-    log.debug('Going into idle...')
+    log.info('Going into idle...')
     updater.idle()
 
 
