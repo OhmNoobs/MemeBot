@@ -77,11 +77,11 @@ def compose_image(details: ExmatriculationInformation) -> Image.Image:
 def build_texts(details) -> TextFields:
     reason_multi_line = text_wrap(details.reason, FONTS.hand_writing_small, 563)
     return TextFields(
-        "\n".join(reason_multi_line[:2]),
-        date.today().strftime("%d.%m.%Y"),
-        date.today().strftime("%m/%Y"),
-        "Nürnberg, " + date.today().strftime("%d. %B %Y"),
-        f"{details.surname} {details.last_name}"
+        reason_formatted="\n".join(reason_multi_line[:2]),
+        date_numbers_long=date.today().strftime("%d.%m.%Y"),
+        date_numbers_short=date.today().strftime("%m/%Y"),
+        date_formal="Nürnberg, " + date.today().strftime("%d. %B %Y"),
+        first_and_last_name=f"{details.surname} {details.last_name}"
     )
 
 
