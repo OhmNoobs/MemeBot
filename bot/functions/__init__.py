@@ -29,7 +29,7 @@ def aehxtend(_, update, args) -> None:
 
 
 def inline_query(_, update) -> None:
-    update.inline_query.answer(inline_bot.process(update))
+    update.inline_query.answer(inline_bot.create_reply_from(update))
 
 
 def food(_, update) -> None:

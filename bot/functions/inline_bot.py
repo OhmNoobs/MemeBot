@@ -8,7 +8,7 @@ from functions.Mozartizer import Mozartizer
 from helper import Sentence
 
 
-def process(update: Update) -> List[InlineQueryResultArticle]:
+def create_reply_from(update: Update) -> List[InlineQueryResultArticle]:
     user_input = Sentence(update.inline_query.query)
     aehxtended, mozartized = create_results(user_input)
     return provide_results(aehxtended, mozartized)
