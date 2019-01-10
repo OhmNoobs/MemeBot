@@ -3,6 +3,7 @@ from telegram.ext import CommandHandler, InlineQueryHandler, Updater
 import helper
 import functions
 import log_setup
+import neocortex
 
 
 def main():
@@ -10,6 +11,10 @@ def main():
     log.info('Updater created')
     attach_handlers(updater.dispatcher)
     log.info('Handlers attached')
+    neocortex.memories.bind_db()
+    log.info('Made memories accessible')
+    functions.Notifier.remember_subscribers(bot=updater.bot, queue=updater.job_queue)
+    log.info('Remembered previous subscribers.')
     updater.start_polling()
     log.info('Going into idle...')
     updater.idle()

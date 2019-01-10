@@ -8,7 +8,9 @@
 .idea/**/tasks.xml
 .idea/dictionaries
 
+
 # Sensitive or high-churn files:
+.idea/dataSources.xml
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
