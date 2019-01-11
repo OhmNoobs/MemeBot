@@ -85,7 +85,7 @@ def notify_subscriber(bot: Bot, job: Job) -> None:
         log.info('Someone blocked the bot but still had an active subscription. Unsubscribed him.')
 
 
-def remember_subscribers(bot: Bot, queue: JobQueue) -> None:
+def remember_subscribers(queue: JobQueue) -> None:
     for subscriber in memories.get_subscribers():
-        user = telegram.User(**subscriber.to_dict(), bot=bot)
-        create_and_remember_job(job_queue=queue, user=user)
+        subscriber.bot = queue.bot
+        create_and_remember_job(job_queue=queue, user=subscriber)

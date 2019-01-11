@@ -13,7 +13,7 @@ def main():
     log.info('Handlers attached')
     neocortex.memories.bind_db()
     log.info('Made memories accessible')
-    functions.Notifier.remember_subscribers(bot=updater.bot, queue=updater.job_queue)
+    functions.Notifier.remember_subscribers(queue=updater.job_queue)
     log.info('Remembered previous subscribers.')
     updater.start_polling()
     log.info('Going into idle...')
