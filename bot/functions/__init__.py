@@ -4,6 +4,7 @@ from functions import food_scraper, inline_bot, Exmatriculator, Notifier
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
+from functions.kudos import book_kudos
 from helper import Sentence, VERSION, START_HELP
 
 
@@ -50,3 +51,7 @@ def exmatriculate(bot, update, args) -> None:
 
 def notifier(_, update, job_queue) -> None:
     update.message.reply_text(Notifier.manage_subscription(update.message.from_user, job_queue))
+
+
+def kudos(_, update) -> None:
+    update.message.reply_text(book_kudos(update))
