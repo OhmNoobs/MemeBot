@@ -67,15 +67,4 @@ def to_telegram_user(user: User) -> telegram.User:
 
 
 if __name__ == '__main__':
-
     create_db()
-    # bind_db()
-
-    with db_session:
-        # a = User(id=1, is_bot=False, first_name='Hans', wants_notifications=True)
-        # b = User(id=2, is_bot=False, first_name='Erich', wants_notifications=False)
-        # a.kudos_given.add(b)
-        # print(User[1].kudos_received)
-        # print(User[1].kudos_given)
-        # print(User[2].kudos_received)
-        pass

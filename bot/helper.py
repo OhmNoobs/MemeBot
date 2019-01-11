@@ -3,7 +3,7 @@ import random
 from typing import List, Union
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "BOY!"
+VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg"
 START_HELP = """
 *mozartize* - Get a mozartized version of your input
 *aehxtend* - Get a ähxtended version of your input
