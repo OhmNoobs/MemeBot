@@ -70,7 +70,7 @@ def remember_preference_change_of(user: telegram.User) -> None:
     memory_of_user = memories.get_user(user.id)
     if not memory_of_user:
         log.info(f"I dont remember {user.first_name}. Let's add him :)")
-        memory_of_user = memories.add_user(user)
+        memory_of_user = memories.add_telegram_user(user)
     memories.toggle_wants_notification(memory_of_user)
 
 

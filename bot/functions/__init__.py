@@ -4,7 +4,7 @@ from functions import food_scraper, inline_bot, Exmatriculator, Notifier
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
-from functions.kudos import book_kudos
+from functions.kudos import KudosMessageParser
 from helper import Sentence, VERSION, START_HELP
 
 
@@ -54,4 +54,4 @@ def notifier(_, update, job_queue) -> None:
 
 
 def kudos(_, update) -> None:
-    update.message.reply_text(book_kudos(update))
+    update.message.reply_text(KudosMessageParser(update).book_kudos())

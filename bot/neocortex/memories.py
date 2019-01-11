@@ -1,3 +1,4 @@
+import typing
 from typing import Iterator
 
 import telegram
@@ -31,7 +32,7 @@ def create_db():
 
 
 @db_session
-def add_user(user: telegram.User, wants_notifications=False) -> User:
+def add_telegram_user(user: telegram.User, wants_notifications=False) -> User:
     user = User(telegram_id=user.id, is_bot=user.is_bot, first_name=user.first_name,
                 wants_notifications=wants_notifications, last_name=user.last_name, username=user.username,
                 language_code=user.language_code)
@@ -39,12 +40,25 @@ def add_user(user: telegram.User, wants_notifications=False) -> User:
 
 
 @db_session
-def get_user(telegram_id: int) -> User:
+def add_user(username: str):
+    user = User(username=username)
+    return user
+
+
+@db_session
+def get_user(telegram_id: int) -> typing.Optional[User]:
     return User.get(telegram_id=telegram_id)
 
 
 @db_session
+def get_user_by_username(username: str) -> typing.Optional[User]:
+    return User.get(username=username)
+
+
+@db_session
 def give_kudos(giver: User, taker: User) -> None:
+    giver = User[giver.internal_id]
+    taker = User[taker.internal_id]
     giver.kudos_given.add(taker)
 
 
