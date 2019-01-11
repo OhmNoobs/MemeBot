@@ -1,45 +1,45 @@
 import logging
 from typing import List
 
-import telegram
-
+from telegram import MessageEntity, Chat, Update
 from neocortex import memories
-from neocortex.memories import User
 
 log = logging.getLogger()
+MENTION = MessageEntity.MENTION
 
 
 class KudosMessageParser:
 
-    def __init__(self, update: telegram.Update):
+    def __init__(self, update: Update):
         self.update = update
-        self.entities = update.message.entities  # type: telegram.MessageEntity
-        self.chat = update.effective_chat  # type: telegram.Chat
-        self.raw_mentions = [item for item in self.entities if item.type == item.MENTION]  # type: List[telegram.MessageEntity]
-        self.in_group_chat = self.chat.type == self.chat.GROUP or self.chat.type == self.chat.SUPERGROUP
+        self.entities = update.message.entities  # type: MessageEntity
+        self.chat = update.effective_chat  # type: Chat
+        self.mentions = [item for item in self.entities if item.type == MENTION]  # type: List[MessageEntity]
+        self.in_group_chat = self.chat.type == Chat.GROUP or self.chat.type == Chat.SUPERGROUP  # type: bool
 
     def book_kudos(self) -> str:
         sender = memories.remember_telegram_user(self.update.message.from_user)
         if not self.in_group_chat:
             return "Only works in (super)group chats."
-        mentioned_users = map(func=self.convert_to_memory_of_user, iter1=self.raw_mentions)
+        if not self.mentions:
+            return "You need to [mention](https://telegram.org/blog/replies-mentions-hashtags#mentions) " \
+                   "someone to give him kudos!"
+        mentioned_users = map(self.convert_to_memory_of_user, self.mentions)
         for mentioned_user in mentioned_users:
             memories.give_kudos(giver=sender, taker=mentioned_user)
         return "done."
 
-    def convert_to_memory_of_user(self, mention: telegram.MessageEntity):
-        telegram_user = mention.user  # type: telegram.User
+    def convert_to_memory_of_user(self, mention: MessageEntity):
+        telegram_user = mention.user
         if telegram_user:
-            receiver = memories.remember_telegram_user(telegram_user)
+            memorized_user = memories.remember_telegram_user(telegram_user)
         else:
-            receiver = self.remember_username(mention)
-        return receiver
+            memorized_user = memories.remember_username(self.extract_username(mention))
+        return memorized_user
 
-    def remember_username(self, mention: telegram.MessageEntity) -> User:
+    def extract_username(self, mention: MessageEntity):
         name_start = mention.offset + 1
         name_end = mention.offset + mention.length
         mentioned_user = self.update.message.text[name_start:name_end]
-        receiver = memories.get_user_by_username(mentioned_user)
-        if not receiver:
-            receiver = memories.add_user(mentioned_user)
-        return receiver
+        return mentioned_user
+
