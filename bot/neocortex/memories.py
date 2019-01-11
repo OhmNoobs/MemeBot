@@ -1,3 +1,4 @@
+import logging
 import typing
 from typing import Iterator
 
@@ -6,6 +7,7 @@ from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey
 
 DB_FILE = 'neocortex.sqlite'
 db = Database()
+log = logging.getLogger()
 
 
 class User(db.Entity):
@@ -48,6 +50,15 @@ def add_user(username: str):
 @db_session
 def get_user(telegram_id: int) -> typing.Optional[User]:
     return User.get(telegram_id=telegram_id)
+
+
+@db_session
+def remember_telegram_user(user: telegram.User) -> User:
+    user = get_user(user.id)
+    if not user:
+        log.info(f'User {user.username} unknown. Adding him now.')
+        user = add_telegram_user(user)
+    return user
 
 
 @db_session
