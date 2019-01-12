@@ -23,7 +23,8 @@ class KudosMessageParser:
             return "Only works in (super)group chats."
         if not self.mentions:
             return "You need to [mention](https://telegram.org/blog/replies-mentions-hashtags#mentions) " \
-                   "someone to give him kudos!"
+                   "someone to give him kudos! If the mention is not resolved into a clickable link, you're " \
+                   "doing it wrong!"
         mentioned_users = map(self.convert_to_memory_of_user, self.mentions)
         for mentioned_user in mentioned_users:
             memories.give_kudos(giver=sender, taker=mentioned_user)

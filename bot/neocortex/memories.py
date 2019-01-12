@@ -1,5 +1,6 @@
 import logging
 import typing
+from datetime import datetime
 from typing import Iterator
 import re
 
@@ -9,22 +10,27 @@ from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey
 DB_FILE = 'neocortex.sqlite'
 db = Database()
 log = logging.getLogger()
-
-
 username_validator = re.compile(r"([a-zA-Z0-9_]){5,32}")
 
 
 class User(db.Entity):
     internal_id = PrimaryKey(int, auto=True)
-    telegram_id = Optional(int, unique=True, nullable=True)
+    telegram_id = Optional(int, unique=True)  # nullable=True
     username = Optional(str, unique=True, nullable=True)
-    is_bot = Optional(bool, nullable=True)
+    is_bot = Optional(bool)  # nullable=True
     first_name = Optional(str, nullable=True)
     last_name = Optional(str, nullable=True)
     language_code = Optional(str, nullable=True)
-    wants_notifications = Optional(bool, nullable=True)
-    kudos_given = Set('User', reverse='kudos_received')
-    kudos_received = Set('User', reverse='kudos_given')
+    wants_notifications = Optional(bool)  # nullable=True
+    kudos_given = Set('Kudos', reverse='giver')
+    kudos_received = Set('Kudos', reverse='taker')
+
+
+class Kudos(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    giver = Required(User, reverse='kudos_given')
+    taker = Required(User, reverse='kudos_received')
+    timestamp = Required(datetime)
 
 
 def bind_db():
@@ -94,7 +100,7 @@ def get_user_by_username(username: str) -> typing.Optional[User]:
 def give_kudos(giver: User, taker: User) -> None:
     giver = User[giver.internal_id]
     taker = User[taker.internal_id]
-    giver.kudos_given.add(taker)
+    Kudos(giver=giver, taker=taker, timestamp=datetime.now())
 
 
 @db_session
