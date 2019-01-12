@@ -58,4 +58,4 @@ def notifier(_, update, job_queue) -> None:
 
 @send_typing_action
 def kudos(_, update) -> None:
-    update.message.reply_text(KudosMessageParser(update).book_kudos(), parse_mode=telegram.ParseMode.MARKDOWN)
+    update.message.reply_text(KudosMessageParser(update).handle_kudos_command())

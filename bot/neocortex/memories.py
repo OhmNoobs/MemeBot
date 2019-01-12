@@ -5,7 +5,7 @@ from typing import Iterator
 import re
 
 import telegram
-from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey
+from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey, desc
 
 DB_FILE = 'neocortex.sqlite'
 db = Database()
@@ -72,6 +72,21 @@ def toggle_wants_notification(remembered_user: User) -> None:
 def get_subscribers() -> Iterator[telegram.User]:
     subscribers = list(User.select(lambda user: user.wants_notifications))
     return map(_to_telegram_user, subscribers)
+
+
+@db_session
+def remember_top_n_kudos_receivers(n: int) -> str:
+    top_n = User.select().order_by(lambda user: desc(len(user.kudos_received)))[:n]
+    n = len(top_n)
+    answer = f"Top {n} good people:\n"
+    for i in range(n):
+        user = top_n[i]
+        kudos_received = len(user.kudos_received)
+        if kudos_received < 1:
+            break
+        name = user.username if user.username else user.first_name
+        answer += f"{i+1}. {name} ({len(user.kudos_received)})\n"
+    return answer
 
 
 @db_session
