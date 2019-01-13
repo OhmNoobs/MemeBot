@@ -1,57 +1,18 @@
-import logging
-import os
 import re
 import typing
 from datetime import datetime
-from pathlib import Path
 from typing import Iterator
 
 import telegram
-from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey, desc
+from pony.orm import db_session, desc
+from neocortex import log, User, Kudos
 
-DB_FILE = Path(os.path.abspath(__file__)).parent / 'neocortex.sqlite'
-db = Database()
-log = logging.getLogger()
 username_validator = re.compile(r"([a-zA-Z0-9_]){5,32}")
-
-
-class User(db.Entity):
-    internal_id = PrimaryKey(int, auto=True)
-    telegram_id = Optional(int, unique=True)
-    username = Optional(str, unique=True, nullable=True)
-    is_bot = Optional(bool)
-    first_name = Optional(str, nullable=True)
-    last_name = Optional(str, nullable=True)
-    language_code = Optional(str, nullable=True)
-    wants_notifications = Optional(bool)
-    kudos_given = Set('Kudos', reverse='giver')
-    kudos_received = Set('Kudos', reverse='taker')
-
-
-class Kudos(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    giver = Required(User, reverse='kudos_given')
-    taker = Required(User, reverse='kudos_received')
-    timestamp = Required(datetime)
 
 
 class TopKudosReceiver(typing.NamedTuple):
     name: str
     kudos_received: int
-
-
-def bind_db():
-    if DB_FILE.is_file():
-        db.bind(provider='sqlite', filename=DB_FILE.name)
-        db.generate_mapping()
-    else:
-        log.info("Database file doesn't exist. Creating...")
-        create_db()
-
-
-def create_db():
-    db.bind(provider='sqlite', filename=DB_FILE.name, create_db=True)
-    db.generate_mapping(create_tables=True)
 
 
 @db_session
@@ -169,6 +130,3 @@ def validate_username(username):
         raise ValueError("Invalid telegram username provided.")
     pass
 
-
-if __name__ == '__main__':
-    create_db()
