@@ -3,11 +3,12 @@ import typing
 from datetime import datetime
 from typing import Iterator
 import re
+from pathlib import Path
 
 import telegram
 from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey, desc
 
-DB_FILE = 'neocortex.sqlite'
+DB_FILE = Path('neocortex.sqlite')
 db = Database()
 log = logging.getLogger()
 username_validator = re.compile(r"([a-zA-Z0-9_]){5,32}")
@@ -39,12 +40,16 @@ class TopKudosReceiver(typing.NamedTuple):
 
 
 def bind_db():
-    db.bind(provider='sqlite', filename=DB_FILE)
-    db.generate_mapping()
+    if DB_FILE.is_file():
+        db.bind(provider='sqlite', filename=DB_FILE.name)
+        db.generate_mapping()
+    else:
+        log.info("Database file doesn't exist. Creating...")
+        create_db()
 
 
 def create_db():
-    db.bind(provider='sqlite', filename=DB_FILE, create_db=True)
+    db.bind(provider='sqlite', filename=DB_FILE.name, create_db=True)
     db.generate_mapping(create_tables=True)
 
 
@@ -113,7 +118,7 @@ def _get_user(telegram_id: int) -> typing.Optional[User]:
 
 @db_session
 def _create_or_update(user: telegram.User):
-    if user.username:
+    if _get_user_by_username(user.username):
         remembered_telegram_user = _update_username_only_user_to_telegram_user(user)
     else:
         remembered_telegram_user = _add_telegram_user(user)
