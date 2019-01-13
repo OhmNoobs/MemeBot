@@ -1,9 +1,9 @@
 import logging
+import re
 import typing
 from datetime import datetime
-from typing import Iterator
-import re
 from pathlib import Path
+from typing import Iterator
 
 import telegram
 from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey, desc
@@ -16,13 +16,13 @@ username_validator = re.compile(r"([a-zA-Z0-9_]){5,32}")
 
 class User(db.Entity):
     internal_id = PrimaryKey(int, auto=True)
-    telegram_id = Optional(int, unique=True)  # nullable=True
+    telegram_id = Optional(int, unique=True)
     username = Optional(str, unique=True, nullable=True)
-    is_bot = Optional(bool)  # nullable=True
+    is_bot = Optional(bool)
     first_name = Optional(str, nullable=True)
     last_name = Optional(str, nullable=True)
     language_code = Optional(str, nullable=True)
-    wants_notifications = Optional(bool)  # nullable=True
+    wants_notifications = Optional(bool)
     kudos_given = Set('Kudos', reverse='giver')
     kudos_received = Set('Kudos', reverse='taker')
 

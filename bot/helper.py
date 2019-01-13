@@ -1,7 +1,7 @@
 import os
 import random
-from typing import List, Union
 from functools import wraps
+from typing import List, Union
 
 import telegram
 
