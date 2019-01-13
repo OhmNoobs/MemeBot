@@ -53,8 +53,8 @@ def subscribe(job_queue: JobQueue, user: telegram.User) -> str:
 
 
 def create_and_remember_job(job_queue: JobQueue, user: telegram.User) -> None:
-    # job = job_queue.run_daily(callback=notify_subscriber, time=THE_TIME, context=user, name="1337")
-    job = job_queue.run_repeating(callback=notify_subscriber, first=0, interval=120, context=user, name="1337")
+    job = job_queue.run_daily(callback=notify_subscriber, time=THE_TIME, context=user, name="1337")
+    # job = job_queue.run_repeating(callback=notify_subscriber, first=0, interval=120, context=user, name="1337")
     user_jobs[user] = job
 
 

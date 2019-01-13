@@ -1,8 +1,9 @@
 import logging
 from typing import List
 
-from telegram import MessageEntity, Chat, Update, User, Message
+from telegram import MessageEntity, Chat, Update, Message
 from neocortex import memories
+from neocortex.memories import TopKudosReceiver
 
 log = logging.getLogger()
 MENTION = MessageEntity.MENTION
@@ -16,7 +17,7 @@ class KudosMessageParser:
         self.chat = update.effective_chat  # type: Chat
         self.mentions = [item for item in update.message.entities if item.type == MENTION]  # type: List[MessageEntity]
         self.in_group_chat = update.effective_chat.type in GROUP_CHAT_TYPES  # type: bool
-        self.only_command_sent = self.message.text.strip() == '/kudos'
+        self.only_command_sent = (self.message.text.strip() == '/kudos')
 
     def handle_kudos_command(self) -> str:
         sender = memories.remember_telegram_user(self.message.from_user)
@@ -40,8 +41,7 @@ class KudosMessageParser:
     def extract_username(self, mention: MessageEntity):
         name_start = mention.offset + 1
         name_end = mention.offset + mention.length
-        mentioned_user = self.message.text[name_start:name_end]
-        return mentioned_user
+        return self.message.text[name_start:name_end]
 
     def no_mentions_reply(self):
         if not self.only_command_sent:
@@ -51,5 +51,16 @@ class KudosMessageParser:
                    "(https://telegram.org/blog/replies-mentions-hashtags#mentions)"
         else:
             # nothing followed the /kudos command: send top 10
-            return memories.remember_top_n_kudos_receivers(10)
+            top_receivers = memories.remember_top_n_kudos_receivers(10)
+            return self.formulate_top_kudos_receivers_response(top_receivers)
+
+    @staticmethod
+    def formulate_top_kudos_receivers_response(top_receivers: List[TopKudosReceiver]) -> str:
+        if not top_receivers:
+            return "No kudos given so far. Start by sending `/kudos @user`"
+        answer = f"Top {len(top_receivers)} good people:\n"
+        for position, receiver in enumerate(top_receivers, 1):
+            if receiver.kudos_received > 0:
+                answer += f"{position}. {receiver.name} ({receiver.kudos_received} kudos received)\n"
+        return answer
 
