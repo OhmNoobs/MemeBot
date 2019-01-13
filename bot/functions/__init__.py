@@ -4,7 +4,8 @@ from functions import food_scraper, inline_bot, Exmatriculator, Notifier
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
-from helper import Sentence, VERSION, START_HELP
+from functions.kudos import KudosMessageParser
+from helper import Sentence, VERSION, START_HELP, send_typing_action
 
 
 def hello(_, update) -> None:
@@ -32,14 +33,17 @@ def inline_query(_, update) -> None:
     update.inline_query.answer(inline_bot.create_reply_from(update))
 
 
+@send_typing_action
 def food(_, update) -> None:
     update.message.reply_text(food_scraper.order(), parse_mode=telegram.ParseMode.MARKDOWN)
 
 
+@send_typing_action
 def joke(_, update, args) -> None:
     update.message.reply_text(make_joke_about(args))
 
 
+@send_typing_action
 def exmatriculate(bot, update, args) -> None:
     exmatriculation = Exmatriculator.generate_exmatriculation(args)
     if exmatriculation:
@@ -50,3 +54,8 @@ def exmatriculate(bot, update, args) -> None:
 
 def notifier(_, update, job_queue) -> None:
     update.message.reply_text(Notifier.manage_subscription(update.message.from_user, job_queue))
+
+
+@send_typing_action
+def kudos(_, update) -> None:
+    update.message.reply_text(KudosMessageParser(update).handle_kudos_command())

@@ -4,7 +4,6 @@ from datetime import time
 from typing import Dict
 
 import telegram
-from pony.orm import ObjectNotFound
 from telegram import Bot
 from telegram.ext import JobQueue, Job
 
@@ -48,14 +47,14 @@ def manage_subscription(user: telegram.User, job_queue: JobQueue) -> str:
 
 
 def subscribe(job_queue: JobQueue, user: telegram.User) -> str:
-    # job = job_queue.run_daily(callback=notify_subscriber, time=THE_TIME, context=user, name="1337")
     create_and_remember_job(job_queue, user)
     remember_preference_change_of(user)
     return "You will be notified."
 
 
 def create_and_remember_job(job_queue: JobQueue, user: telegram.User) -> None:
-    job = job_queue.run_repeating(callback=notify_subscriber, first=0, interval=10, context=user, name="1337")
+    job = job_queue.run_daily(callback=notify_subscriber, time=THE_TIME, context=user, name="1337")
+    # job = job_queue.run_repeating(callback=notify_subscriber, first=0, interval=120, context=user, name="1337")
     user_jobs[user] = job
 
 
@@ -67,11 +66,7 @@ def unsubscribe(user: telegram.User) -> str:
 
 
 def remember_preference_change_of(user: telegram.User) -> None:
-    try:
-        memory_of_user = memories.get_user(user.id)
-    except ObjectNotFound:
-        log.info(f"I dont remember {user.first_name}. Let's add him :)")
-        memory_of_user = memories.add_user(user)
+    memory_of_user = memories.remember_telegram_user(user)
     memories.toggle_wants_notification(memory_of_user)
 
 

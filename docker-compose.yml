@@ -8,3 +8,5 @@ services:
       - TZ=Europe/Berlin
     container_name: memebot
     restart: always
+    volumes:
+      - /mnt/your/local/storage/neocortex.sqlite:/usr/src/app/bot/neocortex/neocortex.sqlite

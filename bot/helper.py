@@ -1,9 +1,12 @@
 import os
 import random
 from typing import List, Union
+from functools import wraps
+
+import telegram
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg"
+VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg feat. kudos"
 START_HELP = """
 *mozartize* - Get a mozartized version of your input
 *aehxtend* - Get a ähxtended version of your input
@@ -63,3 +66,14 @@ def get_bot_token() -> str:
         raise Exception("No bot token specified. Please provide one via environment variable 'BOT_TOKEN'.")
     return bot_token
 
+
+def send_typing_action(func):
+    """Sends typing action while processing func command."""
+
+    @wraps(func)
+    def command_func(*args, **kwargs):
+        bot, update = args
+        bot.send_chat_action(chat_id=update.effective_message.chat_id, action=telegram.ChatAction.TYPING)
+        return func(bot, update, **kwargs)
+
+    return command_func
