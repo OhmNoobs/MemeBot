@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 import typing
 from datetime import datetime
@@ -8,7 +9,7 @@ from typing import Iterator
 import telegram
 from pony.orm import Database, Set, db_session, Required, Optional, PrimaryKey, desc
 
-DB_FILE = Path('neocortex.sqlite')
+DB_FILE = Path(os.path.abspath(__file__)).parent / 'neocortex.sqlite'
 db = Database()
 log = logging.getLogger()
 username_validator = re.compile(r"([a-zA-Z0-9_]){5,32}")
