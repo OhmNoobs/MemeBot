@@ -7,7 +7,7 @@ import telegram
 from telegram import Bot
 from telegram.ext import JobQueue, Job
 
-from neocortex import memories
+from neocortex import database
 
 THE_TIME = time(hour=13, minute=37)
 log = logging.getLogger()
@@ -66,8 +66,8 @@ def unsubscribe(user: telegram.User) -> str:
 
 
 def remember_preference_change_of(user: telegram.User) -> None:
-    memory_of_user = memories.remember_telegram_user(user)
-    memories.toggle_wants_notification(memory_of_user)
+    memory_of_user = database.remember_telegram_user(user)
+    database.toggle_wants_notification(memory_of_user)
 
 
 def notify_subscriber(bot: Bot, job: Job) -> None:
@@ -81,6 +81,6 @@ def notify_subscriber(bot: Bot, job: Job) -> None:
 
 
 def remember_subscribers(queue: JobQueue) -> None:
-    for subscriber in memories.get_subscribers():
+    for subscriber in database.get_subscribers():
         subscriber.bot = queue.bot
         create_and_remember_job(job_queue=queue, user=subscriber)
