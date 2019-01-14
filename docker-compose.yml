@@ -9,4 +9,6 @@ services:
     container_name: memebot
     restart: always
     volumes:
-      - /mnt/your/local/storage/neocortex.sqlite:/usr/src/app/bot/neocortex/neocortex.sqlite
+      - your_volume:/usr/src/app/bot/neocortex
+volumes:
+  your_volume:
