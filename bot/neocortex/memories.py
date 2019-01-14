@@ -52,7 +52,7 @@ def remember_top_n_kudos_receivers(n: int) -> typing.List[TopKudosReceiver]:
     top_n = top_n.filter(lambda user: len(user.kudos_received) > 0)[:n]
     top_receivers = []
     for user in top_n:
-        name = f'@{user.username}' if user.username else user.first_name
+        name = user.username if user.username else user.first_name
         top_receivers.append(TopKudosReceiver(name, len(user.kudos_received)))
     return top_receivers
 
