@@ -33,6 +33,10 @@ def inline_query(_, update) -> None:
     update.inline_query.answer(inline_bot.create_reply_from(update))
 
 
+def inline_query_feedback(_, update) -> None:
+    inline_bot.process_callback(update)
+
+
 @send_typing_action
 def food(_, update) -> None:
     update.message.reply_text(food_scraper.order(), parse_mode=telegram.ParseMode.MARKDOWN)

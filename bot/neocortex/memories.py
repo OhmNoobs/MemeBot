@@ -59,10 +59,14 @@ def remember_top_n_kudos_receivers(n: int) -> typing.List[TopKudosReceiver]:
 
 @db_session
 def _add_user(username: str) -> User:
-    validate_username(username)
-    log.info(f'User({username}) unknown. Adding him now.')
-    user = User(username=username)
-    return user
+    if valid_username(username):
+        log.info(f'User({username}) unknown. Adding him now.')
+        user = User(username=username)
+        return user
+    else:
+        error = f"Invalid telegram username provided '{username}' does not comply with telegrams username policies."
+        log.error(error)
+        raise TypeError(error)
 
 
 @db_session
@@ -121,12 +125,10 @@ def _to_telegram_user(user: User) -> telegram.User:
     return telegram.User(**subscriber)
 
 
-def validate_username(username):
+def valid_username(username):
     """
     According to https://core.telegram.org/method/account.checkUsername:
     Accepted characters: A-z (case-insensitive), 0-9 and underscores. Length: 5-32 characters.
     """
-    if len(username_validator.findall(username)) != 1:
-        raise ValueError("Invalid telegram username provided.")
-    pass
+    return len(username_validator.findall(username)) == 1
 
