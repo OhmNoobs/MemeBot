@@ -46,9 +46,7 @@ class KudosMessageParser:
     def no_mentions_reply(self):
         if not self.only_command_sent:
             # something followed the /kudos command that did not contain a mention
-            return "You need to mention someone to give him kudos! If the mention is not resolved into a clickable " \
-                   "link, you're doing it wrong!\n\nYou can send me /kudos (without args) to see the top 10. \n" \
-                   "(https://telegram.org/blog/replies-mentions-hashtags#mentions)"
+            return "You need to mention someone with a username (@name) to give him kudos!"
         else:
             # nothing followed the /kudos command: send top 10
             top_receivers = memories.remember_top_n_kudos_receivers(10)
