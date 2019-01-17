@@ -1,3 +1,4 @@
+import logging
 from typing import List
 from uuid import uuid4
 
@@ -10,6 +11,7 @@ from neocortex import memories
 from neocortex.memories import valid_username
 
 processed_inline_kudos = {}
+log = logging.getLogger()
 
 
 def create_reply_from(update: Update) -> List[InlineQueryResultArticle]:
@@ -55,7 +57,16 @@ def create_results(query: Sentence) -> List[InlineQueryResultArticle]:
 
 def process_callback(update: Update):
     sender = memories.remember_telegram_user(update.effective_user)
-    receivers = processed_inline_kudos[update.chosen_inline_result.result_id]
+    receivers = link_to_inline_result(update)
     for receiver in receivers:
         receiver = memories.remember_username(receiver[1:])
         memories.give_kudos(sender, receiver)
+
+
+def link_to_inline_result(update):
+    try:
+        receivers = processed_inline_kudos[update.chosen_inline_result.result_id]
+    except KeyError:
+        log.info("Update couldn't be linked to sent inline response.")
+        return []
+    return receivers

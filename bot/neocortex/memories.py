@@ -114,8 +114,9 @@ def _get_user_by_username(username: str) -> typing.Optional[User]:
 
 @db_session
 def give_kudos(giver: User, taker: User) -> None:
-    giver = User[giver.internal_id]
-    taker = User[taker.internal_id]
+    giver = User[giver.internal_id]  # type: User
+    taker = User[taker.internal_id]  # type: User
+    log.info(f"{giver.username} gave kudos to {taker.username}")
     Kudos(giver=giver, taker=taker, timestamp=datetime.now())
 
 
