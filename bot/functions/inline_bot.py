@@ -12,14 +12,23 @@ from neocortex.memories import valid_username
 
 processed_inline_kudos = {}
 log = logging.getLogger()
+KUDOS_CALLBACK_ID_PREFIX = 'kudos-'
 
 
 def create_reply_from(update: Update) -> List[InlineQueryResultArticle]:
     user_input = Sentence(update.inline_query.query)
-    return create_results(user_input)
+    return _create_result_articles(user_input)
 
 
-def generate_mozartized_article(query: Sentence):
+def _create_result_articles(query: Sentence) -> List[InlineQueryResultArticle]:
+    results = [_generate_aehxtended_article(query), _generate_mozartized_article(query)]
+    kudos_article = _generate_kudos_article(query)
+    if kudos_article:
+        results.append(kudos_article)
+    return results
+
+
+def _generate_mozartized_article(query: Sentence):
     mozartized = Mozartizer(query).mozartize()
     if not mozartized:
         mozartized = 'Mnmnmnnn'
@@ -31,29 +40,7 @@ def generate_mozartized_article(query: Sentence):
         input_message_content=InputTextMessageContent(mozartized))
 
 
-def create_results(query: Sentence) -> List[InlineQueryResultArticle]:
-    results = [generate_aehxtended_article(query), generate_mozartized_article(query)]
-    kudos_article = generate_kudos_article(query)
-    if kudos_article:
-        results.append(kudos_article)
-    return results
-
-
-def generate_kudos_article(query: Sentence) -> Optional[InlineQueryResultArticle]:
-    mentioned_users = [word[1:] for word in query.word_list if word.startswith("@") and valid_username(word[1:])]
-    if not mentioned_users:
-        return None
-    user_names = ' '.join(mentioned_users)
-    callback_key = uuid4()
-    processed_inline_kudos[str(callback_key)] = mentioned_users
-    return InlineQueryResultArticle(
-        id=callback_key,
-        title="Give Kudos",
-        description=user_names,
-        input_message_content=InputTextMessageContent(f"Gave kudos to {user_names}"))
-
-
-def generate_aehxtended_article(query: Sentence) -> InlineQueryResultArticle:
+def _generate_aehxtended_article(query: Sentence) -> InlineQueryResultArticle:
     aehxtended = Aehxtender(query).get_aehxtended()
     if not aehxtended:
         aehxtended = 'äh'
@@ -64,17 +51,38 @@ def generate_aehxtended_article(query: Sentence) -> InlineQueryResultArticle:
         input_message_content=InputTextMessageContent(aehxtended))
 
 
-def process_callback(update: Update):
+def _generate_kudos_article(query: Sentence) -> Optional[InlineQueryResultArticle]:
+    mentioned_users = [word[1:] for word in query.word_list if word.startswith("@") and valid_username(word[1:])]
+    if not mentioned_users:
+        return None
+    user_names = ' '.join(mentioned_users)
+    callback_key = f'{KUDOS_CALLBACK_ID_PREFIX}{uuid4()}'
+    processed_inline_kudos[str(callback_key)] = mentioned_users
+    return InlineQueryResultArticle(
+        id=callback_key,
+        title="Give Kudos",
+        description=user_names,
+        input_message_content=InputTextMessageContent(f"Gave kudos to {user_names}"))
+
+
+def process_callback(update: Update) -> None:
     sender = memories.remember_telegram_user(update.effective_user)
-    receivers = link_to_inline_result(update)
+    if not _is_kudos_result_id(update.chosen_inline_result.result_id):
+        return
+    receivers = _link_to_inline_result(update.chosen_inline_result.result_id)
+
     for receiver in receivers:
         receiver = memories.remember_username(receiver)
         memories.give_kudos(sender, receiver)
 
 
-def link_to_inline_result(update) -> List[str]:
+def _is_kudos_result_id(result_id: str) -> bool:
+    return result_id.startswith(KUDOS_CALLBACK_ID_PREFIX)
+
+
+def _link_to_inline_result(callback_id: str) -> List[str]:
     try:
-        receivers = processed_inline_kudos[update.chosen_inline_result.result_id]
+        receivers = processed_inline_kudos[callback_id]
     except KeyError:
         log.info("Update couldn't be linked to sent inline response.")
         return []
