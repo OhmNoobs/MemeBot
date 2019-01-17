@@ -17,10 +17,10 @@ def book_kudos(sender: User, mentioned_users: List[User]):
 
 def formulate_top_kudos_receivers_response(top_receivers: List[TopKudosReceiver]) -> str:
     if not top_receivers:
-        return "No kudos given so far. Start by sending `/kudos @user`"
-    answer = f"Top {len(top_receivers)} good people:\n"
-    for position, receiver in enumerate(top_receivers, 1):
-        if receiver.kudos_received > 0:
+        answer = "No kudos given so far. Start by sending `/kudos @user`"
+    else:
+        answer = f"Top {len(top_receivers)} good people:\n"
+        for position, receiver in enumerate(top_receivers, 1):
             answer += f"{position}. {receiver.name} ({receiver.kudos_received} kudos received)\n"
     return answer
 
