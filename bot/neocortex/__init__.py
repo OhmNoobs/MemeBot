@@ -2,6 +2,7 @@ import datetime
 import logging
 import os
 from pathlib import Path
+from typing import Union
 
 from pony.orm import Database, PrimaryKey, Optional, Set, Required
 
@@ -10,17 +11,17 @@ db = Database()
 log = logging.getLogger()
 
 
-def bind_db():
+def bind_db(filename: Path = DB_FILE):
     if DB_FILE.is_file():
-        db.bind(provider='sqlite', filename=DB_FILE.name)
+        db.bind(provider='sqlite', filename=filename)
         db.generate_mapping()
     else:
         log.info("Database file doesn't exist. Creating...")
-        create_db()
+        create_db(filename.name)
 
 
-def create_db():
-    db.bind(provider='sqlite', filename=DB_FILE.name, create_db=True)
+def create_db(filename: str):
+    db.bind(provider='sqlite', filename=filename, create_db=True)
     db.generate_mapping(create_tables=True)
 
 
@@ -45,4 +46,4 @@ class Kudos(db.Entity):
 
 
 if __name__ == '__main__':
-    create_db()
+    create_db(':memory:')
