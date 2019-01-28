@@ -120,6 +120,11 @@ def give_kudos(giver: User, taker: User) -> None:
     Kudos(giver=giver, taker=taker, timestamp=datetime.now())
 
 
+@db_session
+def get_kudos_of_user(user: User):
+    return len(User[user.internal_id].kudos_received)
+
+
 def _to_telegram_user(user: User) -> telegram.User:
     subscriber = user.to_dict()
     subscriber["id"] = subscriber.pop("telegram_id")
