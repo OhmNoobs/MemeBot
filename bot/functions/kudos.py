@@ -69,6 +69,4 @@ class KudosMessageParser:
         return memories.remember_username(username)
 
     def _extract_username(self, mention: MessageEntity):
-        name_start = mention.offset + 1
-        name_end = mention.offset + mention.length
-        return self.message.text[name_start:name_end]
+        return self.message.parse_entity(mention)[1:]
