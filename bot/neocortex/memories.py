@@ -7,7 +7,7 @@ import telegram
 from pony.orm import db_session, desc
 from neocortex import log, User, Kudos
 
-username_validator = re.compile(r"([a-zA-Z0-9_]){5,32}")
+UserNameValidator = re.compile(r"([a-zA-Z0-9_]){5,32}")
 
 
 class TopKudosReceiver(typing.NamedTuple):
@@ -136,5 +136,5 @@ def valid_username(username):
     According to https://core.telegram.org/method/account.checkUsername:
     Accepted characters: A-z (case-insensitive), 0-9 and underscores. Length: 5-32 characters.
     """
-    return len(username_validator.findall(username)) == 1
+    return len(UserNameValidator.findall(username)) == 1
 
