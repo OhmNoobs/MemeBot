@@ -1,6 +1,6 @@
 import telegram
 
-from functions import food_scraper, inline_bot, Exmatriculator, Notifier
+from functions import food_scraper, inline_bot, Exmatriculator, Notifier, Matomat
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
@@ -63,3 +63,9 @@ def notifier(_, update, job_queue) -> None:
 @send_typing_action
 def kudos(_, update) -> None:
     update.message.reply_text(KudosMessageParser(update).handle_kudos_command())
+
+
+def matomat(_, update) -> None:
+    update.message.reply_text('Kaufen:', reply_markup=Matomat.interpret())
+
+    return None

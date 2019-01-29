@@ -6,7 +6,7 @@ from typing import List, Union
 import telegram
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg feat. kudos"
+VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg feat. matomat"
 START_HELP = """
 *mozartize* - Get a mozartized version of your input
 *aehxtend* - Get a ähxtended version of your input
