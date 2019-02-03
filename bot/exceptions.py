@@ -8,3 +8,7 @@ class ConnectionProblem(FoodProcessorError):
 
 class ParsingError(FoodProcessorError):
     pass
+
+
+class TooPoorException(Exception):
+    pass

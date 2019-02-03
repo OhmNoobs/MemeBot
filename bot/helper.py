@@ -2,9 +2,26 @@ import os
 import random
 from functools import wraps
 from typing import List, Union
-
+import logging
 import telegram
 
+log = logging.getLogger()
+
+
+def create_admin_list_from_env():
+    admins_original = os.environ.get('ADMINS', None)
+    admin_ids = None
+    if admins_original:
+        admin_ids_as_strings = admins_original.split(',')
+        admin_ids = [int(admin) for admin in admin_ids_as_strings]
+    if not admin_ids:
+        log.warning("No admins defined.")
+    else:
+        log.info("Following IDs are admins: " + admins_original)
+    return admin_ids
+
+
+LIST_OF_ADMINS = create_admin_list_from_env()
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg feat. matomat"
 START_HELP = """
@@ -14,6 +31,7 @@ START_HELP = """
 *exmatrikulieren* - Generiert eine Exmatrikulation für arg1 arg2, arg3 ... argN ist der Grund.
 *notify_me* - Toggle notifications
 *version* - Get the version
+*kudos* - Transfer some sweet sweet Internet points to another person by mentioning her.
 
 mozartize und aehxtend gibts auch als *inline query*! Tippe: @ohm-noobs-meme-bot dein input.
 """
@@ -77,3 +95,15 @@ def send_typing_action(func):
         return func(bot, update, **kwargs)
 
     return command_func
+
+
+def restricted(func):
+    @wraps(func)
+    def wrapped(bot, update, *args, **kwargs):
+        user_id = update.effective_user.id
+        if user_id not in LIST_OF_ADMINS:
+            log.info(f"Unauthorized access denied for {user_id}.")
+            return
+        return func(bot, update, *args, **kwargs)
+
+    return wrapped

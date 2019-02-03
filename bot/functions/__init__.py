@@ -5,7 +5,7 @@ from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
 from functions.kudos import KudosMessageParser
-from helper import Sentence, VERSION, START_HELP, send_typing_action
+from helper import Sentence, VERSION, START_HELP, send_typing_action, restricted
 
 
 def hello(_, update) -> None:
@@ -66,6 +66,14 @@ def kudos(_, update) -> None:
 
 
 def matomat(_, update) -> None:
-    update.message.reply_text('Kaufen:', reply_markup=Matomat.interpret())
+    update.message.reply_text('Kaufen:', reply_markup=Matomat.open_keyboard())
 
-    return None
+
+@send_typing_action
+def buy(_, update, args) -> None:
+    update.message.reply_text(Matomat.buy(update.effective_user, args))
+
+
+@restricted
+def add_product(_, update, args) -> None:
+    update.message.reply_text(Matomat.add_product(args))

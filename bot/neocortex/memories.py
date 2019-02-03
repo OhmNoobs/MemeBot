@@ -5,7 +5,10 @@ from typing import Iterator
 
 import telegram
 from pony.orm import db_session, desc
-from neocortex import log, User, Kudos
+
+from exceptions import TooPoorException
+from functions.Matomat import ProductDescription
+from neocortex import log, User, Kudos, Product, Transaction
 
 UserNameValidator = re.compile(r"([a-zA-Z0-9_]){5,32}")
 
@@ -125,6 +128,19 @@ def get_kudos_of_user(user: User):
     return len(User[user.internal_id].kudos_received)
 
 
+@db_session
+def get_all_products():
+    return Product.get()
+
+
+@db_session
+def remember_shop_owner() -> User:
+    shop_owner = User.get(username="FSIN")
+    if not shop_owner:
+        shop_owner = User(first_name="FS", last_name="IN", username="FSIN", wants_notifications=False)
+    return shop_owner
+
+
 def _to_telegram_user(user: User) -> telegram.User:
     subscriber = user.to_dict()
     subscriber["id"] = subscriber.pop("telegram_id")
@@ -138,3 +154,30 @@ def valid_username(username):
     """
     return len(UserNameValidator.findall(username)) == 1
 
+
+@db_session
+def memorize_transaction(from_user: User, to_user: User, amount: float) -> None:
+    sender = User[from_user.internal_id]
+    money_out = sum(transaction.amount for transaction in sender.transactions_sent)
+    money_in = sum(transaction.amount for transaction in sender.transactions_received)
+    if money_in - money_out >= amount:
+        Transaction(sender=User[from_user.internal_id], receiver=User[to_user.internal_id], amount=amount, timestamp=datetime.now())
+    else:
+        raise TooPoorException()
+
+
+@db_session
+def remember_product(description: ProductDescription) -> Product:
+    return Product.get(lambda product:
+                       product.name == description.name
+                       and product.price == description.price
+                       and product.description == description.description)
+
+
+@db_session
+def memorize_product(product: ProductDescription, for_sale: bool = True, image_path: str = None):
+    return Product(name=product.name,
+                   price=product.price,
+                   description=product.description,
+                   image_path=image_path,
+                   for_sale=for_sale)

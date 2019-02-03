@@ -3,15 +3,16 @@ import logging
 import os
 from pathlib import Path
 
-from pony.orm import Database, PrimaryKey, Optional, Set, Required
+from pony.orm import Database, PrimaryKey, Optional, Set, Required, db_session, LongStr
 
-DB_FILE = Path(os.path.abspath(__file__)).parent / 'neocortex.sqlite'
+_DB_FILE_LOCATION = Path(os.path.abspath(__file__)).parent / 'neocortex.sqlite'
+_SHOP_OWNER_USER_ID = None
 db = Database()
 log = logging.getLogger()
 
 
-def bind_db(db_path: Path = DB_FILE):
-    if DB_FILE.is_file():
+def bind_db(db_path: Path = _DB_FILE_LOCATION):
+    if _DB_FILE_LOCATION.is_file():
         db.bind(provider='sqlite', filename=db_path.name)
         db.generate_mapping()
     else:
@@ -20,6 +21,7 @@ def bind_db(db_path: Path = DB_FILE):
 
 
 def create_db(filename: str):
+    global _SHOP_OWNER_USER_ID
     db.bind(provider='sqlite', filename=filename, create_db=True)
     db.generate_mapping(create_tables=True)
 
@@ -35,6 +37,8 @@ class User(db.Entity):
     wants_notifications = Optional(bool)
     kudos_given = Set('Kudos', reverse='giver')
     kudos_received = Set('Kudos', reverse='taker')
+    transactions_sent = Set('Transaction', reverse='sender')
+    transactions_received = Set('Transaction', reverse='receiver')
 
 
 class Kudos(db.Entity):
@@ -42,6 +46,26 @@ class Kudos(db.Entity):
     giver = Required(User, reverse='kudos_given')
     taker = Required(User, reverse='kudos_received')
     timestamp = Required(datetime.datetime)
+
+
+class Product(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    name = Required(str)
+    price = Required(float)
+    for_sale = Required(bool)
+    description = Optional(str, nullable=True)
+    image_path = Optional(str, nullable=True)
+    transactions = Set('Transaction')
+
+
+class Transaction(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    amount = Required(float)
+    timestamp = Required(datetime.datetime)
+    description = Optional(LongStr, lazy=True)
+    sender = Required(User, reverse='transactions_sent')
+    receiver = Required(User, reverse='transactions_received')
+    product = Required(Product)
 
 
 if __name__ == '__main__':
