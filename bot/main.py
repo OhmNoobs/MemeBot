@@ -1,4 +1,4 @@
-from telegram.ext import CommandHandler, InlineQueryHandler, Updater, ChosenInlineResultHandler, RegexHandler
+from telegram.ext import CommandHandler, InlineQueryHandler, Updater, ChosenInlineResultHandler
 
 import helper
 import functions
@@ -13,6 +13,9 @@ def main():
     log.info('Handlers attached')
     neocortex.bind_db()
     log.info('Made memories accessible')
+
+    # TODO: Remeber shop owner, remember banned users
+
     functions.Notifier.remember_subscribers(queue=updater.job_queue)
     log.info('Remembered previous subscribers.')
     updater.start_polling()
@@ -34,6 +37,7 @@ def attach_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler('matomat', functions.matomat))
     dispatcher.add_handler(CommandHandler('buy', functions.buy, pass_args=True))
     dispatcher.add_handler(CommandHandler('add_product', functions.add_product, pass_args=True))
+    dispatcher.add_handler(CommandHandler('deposit', functions.deposit, pass_args=True))
     dispatcher.add_handler(InlineQueryHandler(functions.inline_query))
     dispatcher.add_handler(ChosenInlineResultHandler(functions.inline_query_feedback))
     dispatcher.add_error_handler(error_logger)

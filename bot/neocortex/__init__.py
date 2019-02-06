@@ -1,12 +1,11 @@
-import datetime
+from datetime import datetime
 import logging
 import os
 from pathlib import Path
 
-from pony.orm import Database, PrimaryKey, Optional, Set, Required, db_session, LongStr
+from pony.orm import Database, PrimaryKey, Optional, Set, Required
 
 _DB_FILE_LOCATION = Path(os.path.abspath(__file__)).parent / 'neocortex.sqlite'
-_SHOP_OWNER_USER_ID = None
 db = Database()
 log = logging.getLogger()
 
@@ -21,7 +20,6 @@ def bind_db(db_path: Path = _DB_FILE_LOCATION):
 
 
 def create_db(filename: str):
-    global _SHOP_OWNER_USER_ID
     db.bind(provider='sqlite', filename=filename, create_db=True)
     db.generate_mapping(create_tables=True)
 
@@ -39,13 +37,15 @@ class User(db.Entity):
     kudos_received = Set('Kudos', reverse='taker')
     transactions_sent = Set('Transaction', reverse='sender')
     transactions_received = Set('Transaction', reverse='receiver')
+    balance = Optional(float)
+    banned_until = Optional(datetime)
 
 
 class Kudos(db.Entity):
     id = PrimaryKey(int, auto=True)
     giver = Required(User, reverse='kudos_given')
     taker = Required(User, reverse='kudos_received')
-    timestamp = Required(datetime.datetime)
+    timestamp = Required(datetime)
 
 
 class Product(db.Entity):
@@ -61,8 +61,8 @@ class Product(db.Entity):
 class Transaction(db.Entity):
     id = PrimaryKey(int, auto=True)
     amount = Required(float)
-    timestamp = Required(datetime.datetime)
-    description = Optional(LongStr, lazy=True)
+    timestamp = Required(datetime)
+    description = Optional(str, 2000, nullable=True, lazy=True)
     sender = Required(User, reverse='transactions_sent')
     receiver = Required(User, reverse='transactions_received')
     product = Required(Product)
@@ -70,3 +70,4 @@ class Transaction(db.Entity):
 
 if __name__ == '__main__':
     create_db(':memory:')
+    pass

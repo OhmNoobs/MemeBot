@@ -77,3 +77,8 @@ def buy(_, update, args) -> None:
 @restricted
 def add_product(_, update, args) -> None:
     update.message.reply_text(Matomat.add_product(args))
+
+
+@send_typing_action
+def deposit(_, update, args):
+    update.message.reply_text(Matomat.deposit(update.effective_user, args))

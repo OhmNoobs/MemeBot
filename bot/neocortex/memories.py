@@ -1,21 +1,36 @@
 import re
 import typing
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Iterator
 
 import telegram
-from pony.orm import db_session, desc
+from pony.orm import db_session, desc, select
 
-from exceptions import TooPoorException
-from functions.Matomat import ProductDescription
+from exceptions import TooPoorException, TooRichException, FloodingError
+from functions.Matomat import ProductDescription, MAXIMUM_DEPOSIT
 from neocortex import log, User, Kudos, Product, Transaction
 
 UserNameValidator = re.compile(r"([a-zA-Z0-9_]){5,32}")
+DEPOSIT = 'deposit'
+RECENT_TIMESPAN = timedelta(hours=1, minutes=30)
+TRANSACTION_FLOODING_THRESHOLD = 10
+DEPOSIT_FLOODING_THRESHOLD = 3
+blocked_users = {}
 
 
 class TopKudosReceiver(typing.NamedTuple):
     name: str
     kudos_received: int
+
+
+@db_session
+def remember_blocked_users() -> typing.List[User]:
+    return list(User.select(lambda user: user.banned_until))
+
+
+@db_session
+def block_user(user: User, block_expiry: datetime):
+    User[user.internal_id].banned_until = block_expiry
 
 
 @db_session
@@ -86,7 +101,7 @@ def _get_user(telegram_id: int) -> typing.Optional[User]:
 
 
 @db_session
-def _create_or_update(user: telegram.User):
+def _create_or_update(user: telegram.User) -> User:
     if _get_user_by_username(user.username):
         remembered_telegram_user = _update_username_only_user_to_telegram_user(user)
     else:
@@ -103,7 +118,7 @@ def _update_username_only_user_to_telegram_user(user: telegram.User) -> User:
     return user_memory
 
 
-def _prepare_for_update(user):
+def _prepare_for_update(user) -> dict:
     new_user_information = user.to_dict()
     new_user_information["telegram_id"] = new_user_information.pop("id")
     return new_user_information
@@ -124,12 +139,12 @@ def give_kudos(giver: User, taker: User) -> None:
 
 
 @db_session
-def get_kudos_of_user(user: User):
+def get_kudos_of_user(user: User) -> int:
     return len(User[user.internal_id].kudos_received)
 
 
 @db_session
-def get_all_products():
+def get_all_products() -> typing.List[Product]:
     return Product.get()
 
 
@@ -147,7 +162,7 @@ def _to_telegram_user(user: User) -> telegram.User:
     return telegram.User(**subscriber)
 
 
-def valid_username(username):
+def valid_username(username) -> bool:
     """
     According to https://core.telegram.org/method/account.checkUsername:
     Accepted characters: A-z (case-insensitive), 0-9 and underscores. Length: 5-32 characters.
@@ -158,10 +173,46 @@ def valid_username(username):
 @db_session
 def memorize_transaction(from_user: User, to_user: User, amount: float) -> None:
     sender = User[from_user.internal_id]
-    money_out = sum(transaction.amount for transaction in sender.transactions_sent)
-    money_in = sum(transaction.amount for transaction in sender.transactions_received)
-    if money_in - money_out >= amount:
-        Transaction(sender=User[from_user.internal_id], receiver=User[to_user.internal_id], amount=amount, timestamp=datetime.now())
+    receiver = User[to_user.internal_id]
+    _transaction_flooding_protection(sender)
+    if sender == receiver:
+        _memorize_deposit_transaction(sender, receiver, amount)
+    else:
+        _memorize_transfer_transaction(sender, receiver, amount)
+
+
+# noinspection PyTypeChecker
+def _transaction_flooding_protection(depositor: User) -> None:
+    transactions_by_depositor = select(t for t in Transaction if t.sender == depositor)
+    recent_transactions_by_depositor = transactions_by_depositor.select(
+        t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.user == depositor
+    )[:]
+    if len(recent_transactions_by_depositor) > TRANSACTION_FLOODING_THRESHOLD:
+        log.warning(f"Transaction flooding by @{User.username} detected")
+        raise FloodingError('Too many transactions.', depositor)
+    recent_deposits = [
+        transaction for transaction in recent_transactions_by_depositor if transaction.description == DEPOSIT
+    ]
+    if len(recent_deposits) > DEPOSIT_FLOODING_THRESHOLD:
+        log.warning(f"Deposit flooding by @{User.username} detected")
+        raise FloodingError('Too many deposits. Please wait before making attempting any more deposits.', depositor)
+    pass  # yay!
+
+
+@db_session
+def _memorize_deposit_transaction(sender: User, receiver: User, amount: float) -> None:
+    if receiver.balance + amount > MAXIMUM_DEPOSIT:
+        raise TooRichException()
+    Transaction(sender=sender, receiver=receiver, amount=amount, timestamp=datetime.now(), description=DEPOSIT)
+    receiver.balance = receiver.balance + amount
+
+
+@db_session
+def _memorize_transfer_transaction(sender: User, receiver: User, amount: float) -> None:
+    if sender.balance >= amount:
+        Transaction(sender=sender, receiver=receiver, amount=amount, timestamp=datetime.now())
+        sender.balance = sender.balance - amount
+        receiver.balance = receiver.balance + amount
     else:
         raise TooPoorException()
 
@@ -175,7 +226,7 @@ def remember_product(description: ProductDescription) -> Product:
 
 
 @db_session
-def memorize_product(product: ProductDescription, for_sale: bool = True, image_path: str = None):
+def memorize_product(product: ProductDescription, for_sale: bool = True, image_path: str = None) -> Product:
     return Product(name=product.name,
                    price=product.price,
                    description=product.description,
