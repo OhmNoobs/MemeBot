@@ -34,6 +34,11 @@ def block_user(user: User, block_expiry: datetime):
 
 
 @db_session
+def unblock_user(user):
+    User[user.internal_id].banned_until = None
+
+
+@db_session
 def remember_telegram_user(user: telegram.User) -> User:
     rich_user_memory = _get_user(user.id)
     if not rich_user_memory:
@@ -171,21 +176,20 @@ def valid_username(username) -> bool:
 
 
 @db_session
-def memorize_transaction(from_user: User, to_user: User, amount: float) -> None:
+def memorize_transaction(from_user: User, to_user: User, amount: float) -> float:
     sender = User[from_user.internal_id]
     receiver = User[to_user.internal_id]
     _transaction_flooding_protection(sender)
     if sender == receiver:
-        _memorize_deposit_transaction(sender, receiver, amount)
+        return _memorize_deposit_transaction(sender, receiver, amount)
     else:
-        _memorize_transfer_transaction(sender, receiver, amount)
+        return _memorize_transfer_transaction(sender, receiver, amount)
 
 
 # noinspection PyTypeChecker
 def _transaction_flooding_protection(depositor: User) -> None:
-    transactions_by_depositor = select(t for t in Transaction if t.sender == depositor)
-    recent_transactions_by_depositor = transactions_by_depositor.select(
-        t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.user == depositor
+    recent_transactions_by_depositor = select(
+        t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.sender == depositor
     )[:]
     if len(recent_transactions_by_depositor) > TRANSACTION_FLOODING_THRESHOLD:
         log.warning(f"Transaction flooding by @{User.username} detected")
@@ -200,21 +204,25 @@ def _transaction_flooding_protection(depositor: User) -> None:
 
 
 @db_session
-def _memorize_deposit_transaction(sender: User, receiver: User, amount: float) -> None:
-    if receiver.balance + amount > MAXIMUM_DEPOSIT:
+def _memorize_deposit_transaction(sender: User, receiver: User, amount: float) -> float:
+    if not receiver.balance:
+        receiver.balance = 0
+    if amount > MAXIMUM_DEPOSIT or (receiver.balance and receiver.balance + amount > MAXIMUM_DEPOSIT):
         raise TooRichException()
     Transaction(sender=sender, receiver=receiver, amount=amount, timestamp=datetime.now(), description=DEPOSIT)
     receiver.balance = receiver.balance + amount
+    return receiver.balance
 
 
 @db_session
-def _memorize_transfer_transaction(sender: User, receiver: User, amount: float) -> None:
+def _memorize_transfer_transaction(sender: User, receiver: User, amount: float) -> float:
     if sender.balance >= amount:
         Transaction(sender=sender, receiver=receiver, amount=amount, timestamp=datetime.now())
         sender.balance = sender.balance - amount
         receiver.balance = receiver.balance + amount
     else:
         raise TooPoorException()
+    return sender.balance
 
 
 @db_session
@@ -226,9 +234,16 @@ def remember_product(description: ProductDescription) -> Product:
 
 
 @db_session
+def remember_all_products() -> typing.List[Product]:
+    return Product.select()[:]
+
+
+@db_session
 def memorize_product(product: ProductDescription, for_sale: bool = True, image_path: str = None) -> Product:
     return Product(name=product.name,
                    price=product.price,
                    description=product.description,
                    image_path=image_path,
                    for_sale=for_sale)
+
+

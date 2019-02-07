@@ -5,7 +5,7 @@ from typing import List, NamedTuple, Optional
 
 import telegram
 
-from exceptions import TransactionError, FloodingError
+from exceptions import TransactionError, FloodingError, TooRichException
 from neocortex import memories
 
 log = logging.getLogger()
@@ -26,8 +26,13 @@ def flooding_protected_transaction_request(func):
     @wraps(func)
     def wrapped(user: telegram.User, arguments: List[str], *args, **kwargs):
         blocked_users = memories.remember_blocked_users()
-        if user.id in blocked_users and blocked_users[user.id] < datetime.datetime.now():
-            return
+        user_blocked = [blocked_user for blocked_user in blocked_users if blocked_user.telegram_id == user.id]
+        if user_blocked:
+            user_blocked = user_blocked[0]
+            if user_blocked.banned_until < datetime.datetime.now():
+                return
+            else:
+                memories.unblock_user(user_blocked)
         try:
             return func(user, arguments, *args, **kwargs)
         except FloodingError as flooding_error:
@@ -51,8 +56,9 @@ def build_menu(buttons: List[telegram.KeyboardButton],
 
 
 def open_keyboard() -> telegram.ReplyKeyboardMarkup:
-    buttons = [telegram.KeyboardButton('/buy Mate (0,70€)'), telegram.KeyboardButton('/buy Cola (0,70€)'),
-               telegram.KeyboardButton('/buy Wasser (0,50€)')]
+    products = memories.remember_all_products()
+    buttons = [telegram.KeyboardButton(f'/buy {product.name} ({str(product.price).replace(".", ",")}€) {product.description}')
+               for product in products]
     menu = build_menu(buttons, 2)
     return telegram.ReplyKeyboardMarkup(menu)
 
@@ -80,16 +86,16 @@ def buy(user: telegram.User, args: List[str]) -> str:
     if not item:
         return "Product currently unavailable."
     try:
-        memories.memorize_transaction(from_user=customer, to_user=shop_owner, amount=item.price)
+        new_balance = memories.memorize_transaction(from_user=customer, to_user=shop_owner, amount=item.price)
     except TransactionError as transaction_error:
         return str(transaction_error)
-    return "Success."
+    return f"You bought 1x{item.name} for {str(item.price).replace('.', ',')}€. Your new balance is {new_balance:.2f}."
 
 
 def add_product(args: List[str]):
     product_description = extract_product_description(args)
     product = memories.memorize_product(product_description)
-    return f"{product.name} ({product.price}€) added."
+    return f"{product.name} ({product.price:.2f}€) added."
 
 
 @flooding_protected_transaction_request
@@ -102,11 +108,15 @@ def deposit(depositor: telegram.User, args: List[str]) -> str:
     except ValueError:
         return INVALID_DEPOSIT_ARGS
     if amount > MAXIMUM_DEPOSIT:
-        return f"Deposits above {MAXIMUM_DEPOSIT}€ are not allowed."
+        return f"Deposits above {MAXIMUM_DEPOSIT:.2f}€ are not allowed."
     if amount < MINIMUM_DEPOSIT:
-        return f"Deposits below {MINIMUM_DEPOSIT}€ are not allowed."
+        return f"Deposits below {MINIMUM_DEPOSIT:.2f}€ are not allowed."
     internal_user = memories.remember_telegram_user(depositor)
-    memories.memorize_transaction(internal_user, internal_user, amount)
+    try:
+        new_balance = memories.memorize_transaction(internal_user, internal_user, amount)
+    except TooRichException as too_rich_exception:
+        return str(too_rich_exception)
+    return f"Your new balance is {new_balance:.2f}€"
 
 
 def prepare_for_cast_to_float(args):

@@ -37,7 +37,7 @@ class User(db.Entity):
     kudos_received = Set('Kudos', reverse='taker')
     transactions_sent = Set('Transaction', reverse='sender')
     transactions_received = Set('Transaction', reverse='receiver')
-    balance = Optional(float)
+    balance = Optional(float, default=0)
     banned_until = Optional(datetime)
 
 
@@ -65,7 +65,7 @@ class Transaction(db.Entity):
     description = Optional(str, 2000, nullable=True, lazy=True)
     sender = Required(User, reverse='transactions_sent')
     receiver = Required(User, reverse='transactions_received')
-    product = Required(Product)
+    product = Optional(Product)
 
 
 if __name__ == '__main__':
