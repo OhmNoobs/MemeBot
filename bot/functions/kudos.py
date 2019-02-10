@@ -29,7 +29,7 @@ def formulate_top_kudos_receivers_response(top_receivers: List[TopKudosReceiver]
 
 class KudosMessageParser:
 
-    INVALID_ARGUMENTS_REPLY = "You need to mention someone with a username (@name) to give him kudos!"
+    INVALID_ARGUMENTS_REPLY_DECORATION = "🙏🙏🙏"
     CHAT_TYPE_NOT_SUPPORTED_REPLY = "Only works in (super)group chats."
 
     def __init__(self, update: Update):
@@ -62,7 +62,8 @@ class KudosMessageParser:
             return formulate_top_kudos_receivers_response(top_receivers)
         else:
             # something followed the /kudos command that did not contain a mention
-            return self.INVALID_ARGUMENTS_REPLY
+            arguments = self.message.text[7:]
+            return self.INVALID_ARGUMENTS_REPLY_DECORATION + arguments + self.INVALID_ARGUMENTS_REPLY_DECORATION
 
     def _convert_to_memory_of_user(self, mention: MessageEntity):
         username = self._extract_username(mention)

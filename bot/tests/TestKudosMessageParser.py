@@ -50,11 +50,12 @@ class TestKudosMessageParser(TestCase):
         self.assertEqual(memories._get_user_by_username("username").username, "username")
 
     def test__no_mentions_reply(self):
+        argument = "asd"
         parser_with_invalid_argument = mock_parser(sender_name="test_sender",
                                                    chat_type=Chat.GROUP,
-                                                   text_to_parse="/kudos asd")
-        self.assertEqual(parser_with_invalid_argument._no_mentions_reply(),
-                         parser_with_invalid_argument.INVALID_ARGUMENTS_REPLY)
+                                                   text_to_parse=f"/kudos {argument}")
+        decoration = parser_with_invalid_argument.INVALID_ARGUMENTS_REPLY_DECORATION
+        self.assertEqual(parser_with_invalid_argument._no_mentions_reply(), decoration + argument + decoration)
 
     def test__give_kudos_to_all_mentioned_users(self):
         username_1 = "user1"
