@@ -179,28 +179,39 @@ def valid_username(username) -> bool:
 def memorize_transaction(from_user: User, to_user: User, amount: float) -> float:
     sender = User[from_user.internal_id]
     receiver = User[to_user.internal_id]
-    _transaction_flooding_protection(sender)
+    _fail_on_flooding_attempt(sender)
     if sender == receiver:
         return _memorize_deposit_transaction(sender, receiver, amount)
     else:
         return _memorize_transfer_transaction(sender, receiver, amount)
 
 
-# noinspection PyTypeChecker
-def _transaction_flooding_protection(depositor: User) -> None:
-    recent_transactions_by_depositor = select(
-        t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.sender == depositor
-    )[:]
-    if len(recent_transactions_by_depositor) > TRANSACTION_FLOODING_THRESHOLD:
-        log.warning(f"Transaction flooding by @{User.username} detected")
-        raise FloodingError('Too many transactions.', depositor)
+@db_session
+def _fail_on_flooding_attempt(sender: User) -> None:
+    recent_transactions_by_depositor = _fail_on_transaction_flooding(sender)
+    _fail_on_deposit_flooding(recent_transactions_by_depositor, sender)
+    pass  # yay!
+
+
+@db_session
+def _fail_on_deposit_flooding(recent_transactions_by_depositor, sender):
     recent_deposits = [
         transaction for transaction in recent_transactions_by_depositor if transaction.description == DEPOSIT
     ]
     if len(recent_deposits) > DEPOSIT_FLOODING_THRESHOLD:
         log.warning(f"Deposit flooding by @{User.username} detected")
-        raise FloodingError('Too many deposits. Please wait before making attempting any more deposits.', depositor)
-    pass  # yay!
+        raise FloodingError('Too many deposits. Please wait before making attempting any more deposits.', sender)
+
+
+# noinspection PyTypeChecker
+def _fail_on_transaction_flooding(sender):
+    recent_transactions_by_depositor = select(
+        t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.sender == sender
+    )[:]
+    if len(recent_transactions_by_depositor) > TRANSACTION_FLOODING_THRESHOLD:
+        log.warning(f"Transaction flooding by @{sender.username} detected")
+        raise FloodingError('Too many transactions.', sender)
+    return recent_transactions_by_depositor
 
 
 @db_session
@@ -221,7 +232,7 @@ def _memorize_transfer_transaction(sender: User, receiver: User, amount: float) 
         sender.balance = sender.balance - amount
         receiver.balance = receiver.balance + amount
     else:
-        raise TooPoorException()
+        raise TooPoorException("You didn't deposit enough money.")
     return sender.balance
 
 

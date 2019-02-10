@@ -17,6 +17,10 @@ class TransactionError(Exception):
     pass
 
 
+class TransactionArgsParsingError(TransactionError):
+    pass
+
+
 class TooPoorException(TransactionError):
     pass
 

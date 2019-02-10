@@ -5,7 +5,7 @@ from typing import List, NamedTuple, Optional
 
 import telegram
 
-from exceptions import TransactionError, FloodingError, TooRichException
+from exceptions import TransactionError, FloodingError, TransactionArgsParsingError
 from neocortex import memories
 
 log = logging.getLogger()
@@ -80,7 +80,7 @@ def buy(user: telegram.User, args: List[str]) -> str:
     customer = memories.remember_telegram_user(user)
     product_description = extract_product_description(args)
     if not product_description:
-        return "Use the Keyboard provided by /buy"
+        raise TransactionArgsParsingError("Use the Keyboard provided by /buy")
     shop_owner = memories.remember_shop_owner()
     item = memories.remember_product(product_description)
     if not item:
@@ -100,28 +100,38 @@ def add_product(args: List[str]):
 
 @flooding_protected_transaction_request
 def deposit(depositor: telegram.User, args: List[str]) -> str:
-    if not args:
-        return INVALID_DEPOSIT_ARGS
-    amount = prepare_for_cast_to_float(args)
     try:
-        amount = float(amount)
-    except ValueError:
-        return INVALID_DEPOSIT_ARGS
-    if amount > MAXIMUM_DEPOSIT:
-        return f"Deposits above {MAXIMUM_DEPOSIT:.2f}€ are not allowed."
-    if amount < MINIMUM_DEPOSIT:
-        return f"Deposits below {MINIMUM_DEPOSIT:.2f}€ are not allowed."
-    internal_user = memories.remember_telegram_user(depositor)
-    try:
+        amount = interpret_arguments_as_deposit_amount(args)
+        internal_user = memories.remember_telegram_user(depositor)
         new_balance = memories.memorize_transaction(internal_user, internal_user, amount)
-    except TooRichException as too_rich_exception:
-        return str(too_rich_exception)
+    except TransactionError as transaction_error:
+        return str(transaction_error)
     return f"Your new balance is {new_balance:.2f}€"
 
 
-def prepare_for_cast_to_float(args):
-    amount = args[0]
+def interpret_arguments_as_deposit_amount(args: List[str]) -> float:
+    if not args:
+        raise TransactionArgsParsingError(INVALID_DEPOSIT_ARGS)
+    amount = apply_common_replacements(args[0])
+    amount = cast_to_float(amount)
+    fail_if_amount_out_of_bounds(amount)
+    return amount
+
+
+def apply_common_replacements(amount: str) -> str:
     return amount.replace(',', '.').replace('€', '').replace('-', '')
 
 
+def cast_to_float(amount) -> float:
+    try:
+        amount = float(amount)
+    except ValueError:
+        raise TransactionArgsParsingError(INVALID_DEPOSIT_ARGS)
+    return amount
 
+
+def fail_if_amount_out_of_bounds(amount):
+    if amount > MAXIMUM_DEPOSIT:
+        raise TransactionError(f"Deposits above {MAXIMUM_DEPOSIT:.2f}€ are not allowed.")
+    if amount < MINIMUM_DEPOSIT:
+        raise TransactionError(f"Deposits below {MINIMUM_DEPOSIT:.2f}€ are not allowed.")
