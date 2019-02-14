@@ -1,21 +1,18 @@
 from telegram.ext import CommandHandler, InlineQueryHandler, Updater, ChosenInlineResultHandler
 
-import helper
+import common
 import functions
 import log_setup
 import neocortex
 
 
 def main():
-    updater = Updater(helper.get_bot_token())
+    updater = Updater(common.get_bot_token())
     log.info('Updater created')
     attach_handlers(updater.dispatcher)
     log.info('Handlers attached')
     neocortex.bind_db()
     log.info('Made memories accessible')
-
-    # TODO: Remeber shop owner, remember banned users
-
     functions.Notifier.remember_subscribers(queue=updater.job_queue)
     log.info('Remembered previous subscribers.')
     updater.start_polling()
@@ -28,7 +25,6 @@ def attach_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler('hello', functions.hello))
     dispatcher.add_handler(CommandHandler('version', functions.version))
     dispatcher.add_handler(CommandHandler('mozartize', functions.mozartize, pass_args=True))
-    dispatcher.add_handler(CommandHandler('aehxtend', functions.aehxtend, pass_args=True))
     dispatcher.add_handler(CommandHandler('food', functions.food))
     dispatcher.add_handler(CommandHandler('joke', functions.joke, pass_args=True))
     dispatcher.add_handler(CommandHandler('exmatrikulieren', functions.exmatriculate, pass_args=True))

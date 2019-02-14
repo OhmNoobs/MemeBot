@@ -1,32 +1,27 @@
 import telegram
 
-from functions import food_scraper, inline_bot, Exmatriculator, Notifier, Matomat
-from functions.Aehxtender import Aehxtender
+from functions import food_scraper, inline_bot, Exmatriculator, Notifier, Matomat, helpers
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
 from functions.kudos import KudosMessageParser
-from helper import Sentence, VERSION, START_HELP, send_typing_action, restricted
+from common import Sentence, send_typing_action, restricted
 
 
 def hello(_, update) -> None:
-    update.message.reply_text(f'Hello {update.message.from_user.first_name}')
+    update.message.reply_text(helpers.greet_user(update.message.from_user.first_name))
 
 
 def start(_, update):
-    update.message.reply_text(f'Hi {update.message.from_user.first_name} ich kann folgendes: {START_HELP}.',
+    update.message.reply_text(helpers.help_user(update.message.from_user.first_name),
                               parse_mode=telegram.ParseMode.MARKDOWN)
 
 
 def version(_, update) -> None:
-    update.message.reply_text(VERSION)
+    update.message.reply_text(helpers.version())
 
 
 def mozartize(_, update, args) -> None:
     update.message.reply_text(Mozartizer(Sentence(args)).mozartize())
-
-
-def aehxtend(_, update, args) -> None:
-    update.message.reply_text(Aehxtender(Sentence(args)).get_aehxtended())
 
 
 def inline_query(_, update) -> None:

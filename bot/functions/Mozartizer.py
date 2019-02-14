@@ -1,4 +1,4 @@
-from helper import fortune_is_willing, Sentence
+from common import chance_to_return_true, Sentence
 
 
 class Mozartizer:
@@ -13,7 +13,7 @@ class Mozartizer:
         return ' '.join(self.mozartized_sentence)
 
     def _maybe_mozartize(self, word: str) -> str:
-        if fortune_is_willing():
+        if chance_to_return_true():
             word = self.mozartize_word(word)
         return word
 
@@ -21,8 +21,8 @@ class Mozartizer:
     def mozartize_word(word: str) -> str:
         mozartized_word = ''
         for _ in word:
-            if fortune_is_willing():
-                mozartized_word += 'n' if fortune_is_willing() else 'N'
+            if chance_to_return_true():
+                mozartized_word += 'n' if chance_to_return_true() else 'N'
             else:
-                mozartized_word += 'M' if fortune_is_willing() else 'm'
+                mozartized_word += 'M' if chance_to_return_true() else 'm'
         return mozartized_word

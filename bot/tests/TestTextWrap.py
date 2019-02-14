@@ -1,7 +1,6 @@
 import unittest
 
-from functions.Exmatriculator import FONTS
-from helper import text_wrap
+from functions.Exmatriculator import FONTS, text_wrap
 
 
 class TestTextWrap(unittest.TestCase):

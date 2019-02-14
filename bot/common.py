@@ -1,7 +1,7 @@
 import os
 import random
 from functools import wraps
-from typing import List, Union
+from typing import Union
 import logging
 import telegram
 
@@ -26,14 +26,15 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg feat. matomat"
 START_HELP = """
 *mozartize* - Get a mozartized version of your input
-*aehxtend* - Get a ähxtended version of your input
 *food* - Get some food!
 *exmatrikulieren* - Generiert eine Exmatrikulation für arg1 arg2, arg3 ... argN ist der Grund.
 *notify_me* - Toggle notifications
 *version* - Get the version
 *kudos* - Transfer some sweet sweet Internet points to another person by mentioning her.
+*deposit* - Remember that you deposited some money!
+*matomat* - Buy drinks and more.
 
-mozartize und aehxtend gibts auch als *inline query*! Tippe: @ohm-noobs-meme-bot dein input.
+mozartize und kudos gibts auch als *inline query*! Tippe: @ohm-noobs-meme-bot dein input.
 """
 
 
@@ -49,32 +50,11 @@ class Sentence:
         return ' '.join(self.word_list)
 
 
-def fortune_is_willing(probability=0.5) -> bool:
+def chance_to_return_true(probability=0.5) -> bool:
     if 0 < probability > 1:
         raise ValueError("Choose a value between 0 and 1")
     probability *= 100
     return random.randrange(0, 100) < probability
-
-
-def text_wrap(text, font, max_width) -> List[str]:
-    lines = [""]
-    if font.getsize(text)[0] <= max_width:
-        lines[-1] = text
-    else:
-        words = text.split(' ')
-        for word in words:
-            if font.getsize(word)[0] > max_width:
-                # if the word is to large for a single line, truncate until it fits.
-                while font.getsize(word + "...")[0] > max_width:
-                    word = word[:-1]
-                word = word + "..."
-            if font.getsize(lines[-1] + word)[0] <= max_width:
-                # append word to last line
-                lines[-1] = lines[-1] + word + " "
-            else:
-                # when the line gets longer than the max width append it to new line.
-                lines.append(word + " ")
-    return lines
 
 
 def get_bot_token() -> str:
@@ -89,10 +69,9 @@ def send_typing_action(func):
     """Sends typing action while processing func command."""
 
     @wraps(func)
-    def command_func(*args, **kwargs):
-        bot, update = args
+    def command_func(bot, update, *args, **kwargs):
         bot.send_chat_action(chat_id=update.effective_message.chat_id, action=telegram.ChatAction.TYPING)
-        return func(bot, update, **kwargs)
+        return func(bot, update, *args, **kwargs)
 
     return command_func
 
@@ -102,7 +81,7 @@ def restricted(func):
     def wrapped(bot, update, *args, **kwargs):
         user_id = update.effective_user.id
         if user_id not in LIST_OF_ADMINS:
-            log.info(f"Unauthorized access denied for {user_id}.")
+            log.info(f"Unauthorized access denied for {user_id}. Message: {update.message}")
             return
         return func(bot, update, *args, **kwargs)
 

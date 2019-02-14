@@ -39,6 +39,7 @@ class User(db.Entity):
     transactions_received = Set('Transaction', reverse='receiver')
     balance = Optional(float, default=0)
     banned_until = Optional(datetime)
+    groups = Set('Group')
 
 
 class Kudos(db.Entity):
@@ -66,6 +67,13 @@ class Transaction(db.Entity):
     sender = Required(User, reverse='transactions_sent')
     receiver = Required(User, reverse='transactions_received')
     product = Optional(Product)
+
+
+class Group(db.Entity):
+    id = Required(int)
+    name = Required(str)
+    members = Set(User)
+    PrimaryKey(id, name)
 
 
 if __name__ == '__main__':

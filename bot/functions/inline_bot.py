@@ -4,9 +4,8 @@ from uuid import uuid4
 
 from telegram import InlineQueryResultArticle, InputTextMessageContent, Update
 
-from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
-from helper import Sentence
+from common import Sentence
 from neocortex import memories
 from neocortex.memories import valid_username
 
@@ -21,7 +20,7 @@ def create_reply_from(update: Update) -> List[InlineQueryResultArticle]:
 
 
 def _create_result_articles(query: Sentence) -> List[InlineQueryResultArticle]:
-    results = [_generate_aehxtended_article(query), _generate_mozartized_article(query)]
+    results = [_generate_mozartized_article(query)]
     kudos_article = _generate_kudos_article(query)
     if kudos_article:
         results.append(kudos_article)
@@ -38,17 +37,6 @@ def _generate_mozartized_article(query: Sentence):
         title="Mozartize",
         description="Get a mumbled version of your input.",
         input_message_content=InputTextMessageContent(mozartized))
-
-
-def _generate_aehxtended_article(query: Sentence) -> InlineQueryResultArticle:
-    aehxtended = Aehxtender(query).get_aehxtended()
-    if not aehxtended:
-        aehxtended = 'äh'
-    return InlineQueryResultArticle(
-        id=uuid4(),
-        title="Ähxtend",
-        description="Ähxtends your sentence!",
-        input_message_content=InputTextMessageContent(aehxtended))
 
 
 def _generate_kudos_article(query: Sentence) -> Optional[InlineQueryResultArticle]:
