@@ -4,8 +4,9 @@ services:
     build: .
     image: woop/memebot:latest
     environment:
-      - BOT_TOKEN=SUCH_SECRET_CHANGE_IN_OVERRIDE
+      # - BOT_TOKEN=SECRET change this in docker-compose override
       - TZ=Europe/London
+      # - ADMINS=<admin_id_1>,<admin_id_2> change this in docker-compose override or set it here.
     container_name: memebot
     restart: always
     volumes:
