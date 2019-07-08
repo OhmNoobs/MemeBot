@@ -1,4 +1,5 @@
-import neocortex
+import logging
+log = logging.getLogger()
 
 
 class FoodProcessorError(Exception):
@@ -31,6 +32,10 @@ class TooRichException(TransactionError):
 
 class FloodingError(TransactionError):
 
-    def __init__(self, message: str, offender: neocortex.User):
+    def __init__(self, message: str):
         super().__init__(message)
+        self.offender = None
+
+    def add_offender_and_log_transgression(self, offender):
         self.offender = offender
+        log.info(f"Transaction flooding @{self.offender.username} detected")

@@ -1,3 +1,4 @@
+import logging
 import re
 import typing
 from datetime import datetime, timedelta
@@ -7,9 +8,10 @@ import telegram
 from pony.orm import db_session, desc, select
 
 from exceptions import TooPoorException, TooRichException, FloodingError
-from functions.Matomat import ProductDescription, MAXIMUM_DEPOSIT, TOO_MANY_DEPOSITS
-from neocortex import log, User, Kudos, Product, Transaction
+from functions.Matomat import ProductDescription, MAXIMUM_DEPOSIT, TOO_MANY_TRANSACTIONS
+from neocortex import User, Kudos, Product, Transaction
 
+log = logging.getLogger()
 UserNameValidator = re.compile(r"([a-zA-Z0-9_]){5,32}")
 DEPOSIT = 'deposit'
 RECENT_TIMESPAN = timedelta(hours=1, minutes=30)
@@ -186,32 +188,29 @@ def memorize_transaction(from_user: User, to_user: User, amount: float) -> float
         return _memorize_transfer_transaction(sender, receiver, amount)
 
 
+# noinspection PyTypeChecker
 @db_session
 def _fail_on_flooding_attempt(sender: User) -> None:
-    recent_transactions_by_depositor = _fail_on_transaction_flooding(sender)
-    _fail_on_deposit_flooding(recent_transactions_by_depositor, sender)
+    recent_transactions_by_depositor = select(
+        t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.sender == sender
+    )[:]
+    _fail_on_transaction_flooding(recent_transactions_by_depositor)
+    _fail_on_deposit_flooding(recent_transactions_by_depositor)
     pass  # yay!
 
 
+def _fail_on_transaction_flooding(recent_transactions_by_depositor):
+    if len(recent_transactions_by_depositor) > TRANSACTION_FLOODING_THRESHOLD:
+        raise FloodingError(TOO_MANY_TRANSACTIONS)
+
+
 @db_session
-def _fail_on_deposit_flooding(recent_transactions_by_depositor, sender):
+def _fail_on_deposit_flooding(recent_transactions_by_depositor):
     recent_deposits = [
         transaction for transaction in recent_transactions_by_depositor if transaction.description == DEPOSIT
     ]
     if len(recent_deposits) > DEPOSIT_FLOODING_THRESHOLD:
-        log.warning(f"Deposit flooding by @{sender.username} detected")
-        raise FloodingError(TOO_MANY_DEPOSITS, sender)
-
-
-# noinspection PyTypeChecker
-def _fail_on_transaction_flooding(sender):
-    recent_transactions_by_depositor = select(
-        t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.sender == sender
-    )[:]
-    if len(recent_transactions_by_depositor) > TRANSACTION_FLOODING_THRESHOLD:
-        log.warning(f"Transaction flooding by @{sender.username} detected")
-        raise FloodingError('Too many transactions.', sender)
-    return recent_transactions_by_depositor
+        raise FloodingError(TOO_MANY_TRANSACTIONS)
 
 
 @db_session
@@ -219,8 +218,8 @@ def _memorize_deposit_transaction(sender: User, receiver: User, amount: float) -
     if not receiver.balance:
         receiver.balance = 0
     if amount > MAXIMUM_DEPOSIT or (receiver.balance and receiver.balance + amount > MAXIMUM_DEPOSIT):
-        raise TooRichException(f"You are trying to deposit over {MAXIMUM_DEPOSIT:.2f}€. W"
-                               f"e only sell Mate in 'haushaltsüblichen Mengen'. Please don't leave so much cash here.")
+        raise TooRichException(f"You are trying to deposit over {MAXIMUM_DEPOSIT:.2f}€. "
+                               f"We only sell Mate in 'haushaltsüblichen Mengen'. Please don't deposit so much.")
     Transaction(sender=sender, receiver=receiver, amount=amount, timestamp=datetime.now(), description=DEPOSIT)
     receiver.balance = receiver.balance + amount
     return receiver.balance

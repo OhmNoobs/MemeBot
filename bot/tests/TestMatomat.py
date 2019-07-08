@@ -1,8 +1,9 @@
 import unittest
 
 from functions import Matomat
-from functions.Matomat import INVALID_DEPOSIT_ARGS, MAXIMUM_DEPOSIT, MINIMUM_DEPOSIT, TOO_MANY_DEPOSITS
-from neocortex.memories import DEPOSIT_FLOODING_THRESHOLD
+from functions.Matomat import INVALID_DEPOSIT_ARGS, MAXIMUM_DEPOSIT, MINIMUM_DEPOSIT, \
+    TOO_MANY_TRANSACTIONS
+from neocortex.memories import DEPOSIT_FLOODING_THRESHOLD, TRANSACTION_FLOODING_THRESHOLD
 from tests.test import mock_telegram_user
 
 
@@ -107,7 +108,7 @@ class TestMatomat(unittest.TestCase):
 
         answer = Matomat.deposit(user_b, ["50.00€"])
         self.assertEqual(f"You are trying to deposit over {MAXIMUM_DEPOSIT:.2f}€. "
-                         f"We only sell Mate in 'haushaltsüblichen Mengen'. Please don't leave so much cash here.",
+                         f"We only sell Mate in 'haushaltsüblichen Mengen'. Please don't deposit so much.",
                          answer)
 
         answer = Matomat.deposit(user_b, ["0.00€"])
@@ -119,5 +120,15 @@ class TestMatomat(unittest.TestCase):
         for _ in range(DEPOSIT_FLOODING_THRESHOLD + 1):
             Matomat.deposit(user, ["0.01"])
         answer = Matomat.deposit(user, ["0.01"])
-        self.assertEqual(TOO_MANY_DEPOSITS, answer)
+        self.assertEqual(TOO_MANY_TRANSACTIONS, answer)
         pass
+
+    def test_transaction_flooding_protection(self):
+        user = mock_telegram_user("spam_master_9000")
+        Matomat.deposit(user, ["50"])
+        product = "Mate (0.70€) A timeless classic".split(" ")
+        Matomat.add_product(product)
+        for _ in range(TRANSACTION_FLOODING_THRESHOLD):
+            Matomat.buy(user, product)
+        answer = Matomat.buy(user, product)
+        self.assertEqual(TOO_MANY_TRANSACTIONS, answer)
