@@ -4,10 +4,11 @@ from typing import List
 from unittest import TestCase
 
 import telegram
-from telegram import Update, Message, User, Chat, MessageEntity
+from telegram import Update, Message, Chat, MessageEntity
 
 from functions import KudosMessageParser
 from neocortex import memories
+from tests.test import mock_telegram_user
 
 
 def random_id():
@@ -15,10 +16,7 @@ def random_id():
 
 
 def mock_parser(sender_name: str, chat_type: str, text_to_parse: str, entities: List[telegram.MessageEntity] = None):
-    sender_name = User(id=random_id(),
-                       first_name=sender_name,
-                       is_bot=False,
-                       username=sender_name)
+    sender_name = mock_telegram_user(sender_name)
     chat = Chat(random_id(), chat_type)
     message = Message(message_id=random_id(),
                       from_user=sender_name,

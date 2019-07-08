@@ -7,7 +7,7 @@ import telegram
 from pony.orm import db_session, desc, select
 
 from exceptions import TooPoorException, TooRichException, FloodingError
-from functions.Matomat import ProductDescription, MAXIMUM_DEPOSIT
+from functions.Matomat import ProductDescription, MAXIMUM_DEPOSIT, TOO_MANY_DEPOSITS
 from neocortex import log, User, Kudos, Product, Transaction
 
 UserNameValidator = re.compile(r"([a-zA-Z0-9_]){5,32}")
@@ -199,8 +199,8 @@ def _fail_on_deposit_flooding(recent_transactions_by_depositor, sender):
         transaction for transaction in recent_transactions_by_depositor if transaction.description == DEPOSIT
     ]
     if len(recent_deposits) > DEPOSIT_FLOODING_THRESHOLD:
-        log.warning(f"Deposit flooding by @{User.username} detected")
-        raise FloodingError('Too many deposits. Please wait before making attempting any more deposits.', sender)
+        log.warning(f"Deposit flooding by @{sender.username} detected")
+        raise FloodingError(TOO_MANY_DEPOSITS, sender)
 
 
 # noinspection PyTypeChecker
@@ -219,7 +219,8 @@ def _memorize_deposit_transaction(sender: User, receiver: User, amount: float) -
     if not receiver.balance:
         receiver.balance = 0
     if amount > MAXIMUM_DEPOSIT or (receiver.balance and receiver.balance + amount > MAXIMUM_DEPOSIT):
-        raise TooRichException()
+        raise TooRichException(f"You are trying to deposit over {MAXIMUM_DEPOSIT:.2f}€. W"
+                               f"e only sell Mate in 'haushaltsüblichen Mengen'. Please don't leave so much cash here.")
     Transaction(sender=sender, receiver=receiver, amount=amount, timestamp=datetime.now(), description=DEPOSIT)
     receiver.balance = receiver.balance + amount
     return receiver.balance

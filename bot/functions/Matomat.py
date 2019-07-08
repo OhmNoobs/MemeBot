@@ -10,9 +10,11 @@ from neocortex import memories
 
 log = logging.getLogger()
 INVALID_DEPOSIT_ARGS = "Invalid arguments. Use this like /deposit 20,3"
+INVALID_ADD_ARGS = "Please specify products like this:\n`Mate 0.7€ Beschreibung der Mate`"
 MINIMUM_DEPOSIT = 0.01
 MAXIMUM_DEPOSIT = 50
 BASE_BLOCK_DURATION = datetime.timedelta(hours=1, minutes=30)
+TOO_MANY_DEPOSITS = "Too many deposits. Please wait before making attempting any more deposits."
 
 
 class ProductDescription(NamedTuple):
@@ -66,13 +68,22 @@ def open_keyboard() -> telegram.ReplyKeyboardMarkup:
 def extract_product_description(args: List[str]) -> Optional[ProductDescription]:
     if len(args) < 2:
         return None
+    price = args[1]
+    if not price or 4 < len(price) > 9 or not (price[0] == '(' and price[-1] == ')' and price[-2] == '€'):
+        return None
     if len(args) < 3:
         description = None
     else:
         description = ' '.join(args[2:])
-    price = args[1][1:-2]
+    price = price[1:-2]
     price = price.replace(',', '.')
-    return ProductDescription(name=args[0], price=float(price), description=description)
+    try:
+        price = float(price)
+    except ValueError:
+        return None
+    if price > 99.99:
+        return None
+    return ProductDescription(name=args[0], price=price, description=description)
 
 
 @flooding_protected_transaction_request
@@ -80,7 +91,7 @@ def buy(user: telegram.User, args: List[str]) -> str:
     customer = memories.remember_telegram_user(user)
     product_description = extract_product_description(args)
     if not product_description:
-        raise TransactionArgsParsingError("Use the Keyboard provided by /buy")
+        return "Use the Keyboard provided by /buy"
     shop_owner = memories.remember_shop_owner()
     item = memories.remember_product(product_description)
     if not item:
@@ -94,6 +105,8 @@ def buy(user: telegram.User, args: List[str]) -> str:
 
 def add_product(args: List[str]):
     product_description = extract_product_description(args)
+    if not product_description:
+        return INVALID_ADD_ARGS
     product = memories.memorize_product(product_description)
     return f"{product.name} ({product.price:.2f}€) added."
 
