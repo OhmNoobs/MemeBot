@@ -2,7 +2,7 @@ import unittest
 
 from functions import Matomat
 from functions.Matomat import INVALID_DEPOSIT_ARGS, MAXIMUM_DEPOSIT, MINIMUM_DEPOSIT, TOO_MANY_DEPOSITS
-from neocortex.memories import TRANSACTION_FLOODING_THRESHOLD, DEPOSIT_FLOODING_THRESHOLD
+from neocortex.memories import DEPOSIT_FLOODING_THRESHOLD
 from tests.test import mock_telegram_user
 
 
@@ -116,7 +116,7 @@ class TestMatomat(unittest.TestCase):
 
     def test_deposit_flooding_protection(self):
         user = mock_telegram_user("spamming_boi")
-        for i in range(DEPOSIT_FLOODING_THRESHOLD + 1):
+        for _ in range(DEPOSIT_FLOODING_THRESHOLD + 1):
             Matomat.deposit(user, ["0.01"])
         answer = Matomat.deposit(user, ["0.01"])
         self.assertEqual(TOO_MANY_DEPOSITS, answer)
