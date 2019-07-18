@@ -36,6 +36,6 @@ class FloodingError(TransactionError):
         super().__init__(message)
         self.offender = None
 
-    def add_offender_and_log_transgression(self, offender):
+    def log_transgression(self, offender):
         self.offender = offender
-        log.info(f"Transaction flooding @{self.offender.username} detected")
+        log.warning(f"Transaction flooding @{self.offender.username} detected")

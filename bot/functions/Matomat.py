@@ -100,7 +100,7 @@ def buy(user: telegram.User, args: List[str]) -> str:
         new_balance = memories.memorize_transaction(from_user=customer, to_user=shop_owner, amount=item.price)
     except TransactionError as transaction_error:
         if isinstance(transaction_error, FloodingError):
-            transaction_error.offender = user
+            transaction_error.log_transgression(user)
         return str(transaction_error)
     return f"You bought 1x{item.name} for {str(item.price).replace('.', ',')}€. Your new balance is {new_balance:.2f}."
 
@@ -121,7 +121,7 @@ def deposit(depositor: telegram.User, args: List[str]) -> str:
         new_balance = memories.memorize_transaction(internal_user, internal_user, amount)
     except TransactionError as transaction_error:
         if isinstance(transaction_error, FloodingError):
-            transaction_error.offender = depositor
+            transaction_error.log_transgression(depositor)
         return str(transaction_error)
     return f"Your new balance is {new_balance:.2f}€"
 
