@@ -31,6 +31,7 @@ def attach_handlers(dispatcher):
     dispatcher.add_handler(CommandHandler('exmatrikulieren', functions.exmatriculate, pass_args=True))
     dispatcher.add_handler(CommandHandler('notify_me', functions.notifier, pass_job_queue=True))
     dispatcher.add_handler(CommandHandler('kudos', functions.kudos))
+    dispatcher.add_handler(CommandHandler('paper', functions.toilet_paper, pass_args=True))
     dispatcher.add_handler(InlineQueryHandler(functions.inline_query))
     dispatcher.add_handler(ChosenInlineResultHandler(functions.inline_query_feedback))
     dispatcher.add_error_handler(error_logger)

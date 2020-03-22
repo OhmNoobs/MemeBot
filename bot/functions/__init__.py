@@ -5,6 +5,7 @@ from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
 from functions.kudos import KudosMessageParser
+from functions.ToiletPaper import ToiletPaper
 from helper import Sentence, VERSION, START_HELP, send_typing_action
 
 
@@ -63,3 +64,8 @@ def notifier(_, update, job_queue) -> None:
 @send_typing_action
 def kudos(_, update) -> None:
     update.message.reply_text(KudosMessageParser(update).handle_kudos_command())
+
+
+@send_typing_action
+def toilet_paper(_, update, args) -> None:
+    update.message.reply_text(ToiletPaper(args).wrap())
