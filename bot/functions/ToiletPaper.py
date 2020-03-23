@@ -1,6 +1,6 @@
 from typing import List, Any
 from emoji_data_python import get_emoji_regex
-MAX_WIDTH = 12
+MAX_WIDTH = 10
 
 
 class ToiletPaper:
