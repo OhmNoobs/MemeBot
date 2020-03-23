@@ -6,7 +6,7 @@ from typing import List, Union
 import telegram
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg feat. kudos"
+VERSION = "Transitioned to v12: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transition-guide-to-Version-12.0"
 START_HELP = """
 *mozartize* - Get a mozartized version of your input
 *aehxtend* - Get a ähxtended version of your input
@@ -29,6 +29,9 @@ class Sentence:
 
     def __repr__(self) -> str:
         return ' '.join(self.word_list)
+
+    def as_list(self) -> List[str]:
+        return self.word_list
 
 
 def fortune_is_willing(probability=0.5) -> bool:
@@ -72,8 +75,8 @@ def send_typing_action(func):
 
     @wraps(func)
     def command_func(*args, **kwargs):
-        bot, update = args
-        bot.send_chat_action(chat_id=update.effective_message.chat_id, action=telegram.ChatAction.TYPING)
-        return func(bot, update, **kwargs)
+        update, context = args
+        context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=telegram.ChatAction.TYPING)
+        return func(update, context, **kwargs)
 
     return command_func

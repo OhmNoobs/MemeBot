@@ -1,4 +1,5 @@
-from telegram.ext import CommandHandler, InlineQueryHandler, Updater, ChosenInlineResultHandler
+from telegram import Update
+from telegram.ext import CommandHandler, InlineQueryHandler, Updater, ChosenInlineResultHandler, CallbackContext
 
 import helper
 import functions
@@ -7,13 +8,13 @@ import neocortex
 
 
 def main():
-    updater = Updater(helper.get_bot_token())
+    updater = Updater(helper.get_bot_token(), use_context=True)
     log.info('Updater created')
     attach_handlers(updater.dispatcher)
     log.info('Handlers attached')
     neocortex.bind_db()
     log.info('Made memories accessible')
-    functions.Notifier.remember_subscribers(queue=updater.job_queue)
+    functions.Notifier.remember_subscribers(bot=updater.bot, queue=updater.job_queue)
     log.info('Remembered previous subscribers.')
     updater.start_polling()
     log.info('Going into idle...')
@@ -37,8 +38,8 @@ def attach_handlers(dispatcher):
     dispatcher.add_error_handler(error_logger)
 
 
-def error_logger(_, update, error) -> None:
-    log.warning('Update "%s" caused error "%s"', update, error)
+def error_logger(update: Update, context: CallbackContext) -> None:
+    log.warning('Update "%s" caused error "%s"', update, context.error)
 
 
 if __name__ == '__main__':

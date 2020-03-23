@@ -1,4 +1,6 @@
 import telegram
+from telegram import Update
+from telegram.ext import CallbackContext
 
 from functions import food_scraper, inline_bot, Exmatriculator, Notifier
 from functions.Aehxtender import Aehxtender
@@ -9,63 +11,63 @@ from functions.ToiletPaper import ToiletPaper
 from helper import Sentence, VERSION, START_HELP, send_typing_action
 
 
-def hello(_, update) -> None:
+def hello(update: Update, _) -> None:
     update.message.reply_text(f'Hello {update.message.from_user.first_name}')
 
 
-def start(_, update):
+def start(update: Update, _):
     update.message.reply_text(f'Hi {update.message.from_user.first_name} ich kann folgendes: {START_HELP}.',
                               parse_mode=telegram.ParseMode.MARKDOWN)
 
 
-def version(_, update) -> None:
+def version(update: Update, _) -> None:
     update.message.reply_text(VERSION)
 
 
-def mozartize(_, update, args) -> None:
-    update.message.reply_text(Mozartizer(Sentence(args)).mozartize())
+def mozartize(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(Mozartizer(Sentence(context.args)).mozartize())
 
 
-def aehxtend(_, update, args) -> None:
-    update.message.reply_text(Aehxtender(Sentence(args)).get_aehxtended())
+def aehxtend(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(Aehxtender(Sentence(context.args)).get_aehxtended())
 
 
-def inline_query(_, update) -> None:
+def inline_query(update: Update, _) -> None:
     update.inline_query.answer(inline_bot.create_reply_from(update))
 
 
-def inline_query_feedback(_, update) -> None:
+def inline_query_feedback(update: Update, _) -> None:
     inline_bot.process_callback(update)
 
 
 @send_typing_action
-def food(_, update) -> None:
+def food(update: Update, _) -> None:
     update.message.reply_text(food_scraper.order(), parse_mode=telegram.ParseMode.MARKDOWN)
 
 
 @send_typing_action
-def joke(_, update, args) -> None:
-    update.message.reply_text(make_joke_about(args))
+def joke(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(make_joke_about(context.args))
 
 
 @send_typing_action
-def exmatriculate(bot, update, args) -> None:
-    exmatriculation = Exmatriculator.generate_exmatriculation(args)
+def exmatriculate(update: Update, context: CallbackContext) -> None:
+    exmatriculation = Exmatriculator.generate_exmatriculation(context.args)
     if exmatriculation:
-        bot.send_photo(update.message.chat_id, photo=exmatriculation.form, caption=exmatriculation.description)
+        context.bot.send_photo(update.message.chat_id, photo=exmatriculation.form, caption=exmatriculation.description)
     else:
         update.message.reply_text("Usage: /exmatrikulieren Vorname Nachname Grund bla bla bla")
 
 
-def notifier(_, update, job_queue) -> None:
-    update.message.reply_text(Notifier.manage_subscription(update.message.from_user, job_queue))
+def notifier(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(Notifier.manage_subscription(update.message.from_user, context.job_queue))
 
 
 @send_typing_action
-def kudos(_, update) -> None:
+def kudos(update: Update, _) -> None:
     update.message.reply_text(KudosMessageParser(update).handle_kudos_command())
 
 
 @send_typing_action
-def toilet_paper(_, update, args) -> None:
-    update.message.reply_text(ToiletPaper(args).wrap())
+def toilet_paper(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(ToiletPaper(context.args).wrap())
