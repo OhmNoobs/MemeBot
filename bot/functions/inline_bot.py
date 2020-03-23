@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from telegram import InlineQueryResultArticle, InputTextMessageContent, Update
 
+from functions.ToiletPaper import ToiletPaper
 from functions.Aehxtender import Aehxtender
 from functions.Mozartizer import Mozartizer
 from helper import Sentence
@@ -21,7 +22,11 @@ def create_reply_from(update: Update) -> List[InlineQueryResultArticle]:
 
 
 def _create_result_articles(query: Sentence) -> List[InlineQueryResultArticle]:
-    results = [_generate_aehxtended_article(query), _generate_mozartized_article(query)]
+    results = [
+        _generate_aehxtended_article(query),
+        _generate_mozartized_article(query),
+        _generate_toilet_paper_wrapped_article(query)
+    ]
     kudos_article = _generate_kudos_article(query)
     if kudos_article:
         results.append(kudos_article)
@@ -63,6 +68,15 @@ def _generate_kudos_article(query: Sentence) -> Optional[InlineQueryResultArticl
         title="Give Kudos",
         description=user_names,
         input_message_content=InputTextMessageContent(f"Gave kudos to {user_names}"))
+
+
+def _generate_toilet_paper_wrapped_article(query: Sentence):
+    wrapped = ToiletPaper(query.as_list()).wrap()
+    return InlineQueryResultArticle(
+        id=uuid4(),
+        title="ToiletPaper",
+        description="Wrap in ToiletPaper!",
+        input_message_content=InputTextMessageContent(wrapped))
 
 
 def process_callback(update: Update) -> None:

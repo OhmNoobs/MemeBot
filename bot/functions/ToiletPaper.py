@@ -1,5 +1,6 @@
 from typing import List, Any
 from emoji_data_python import get_emoji_regex
+MAX_WIDTH = 12
 
 
 class ToiletPaper:
@@ -13,7 +14,7 @@ class ToiletPaper:
 
     def _prepare_core_for_wrapping(self):
         clean_core = self._clean_core(self.core)
-        core_rows = list(self._chunks(clean_core, 12))
+        core_rows = list(self._chunks(clean_core, MAX_WIDTH))
         self._pad_last_row_when_necessary(core_rows)
         return core_rows
 
@@ -28,8 +29,8 @@ class ToiletPaper:
 
     @staticmethod
     def _pad_last_row_when_necessary(core_rows: List) -> None:
-        if len(core_rows) > 1 and len(core_rows[-1]) < 12:
-            core_rows[-1] += ["🧻" for _ in range(12 - len(core_rows[-1]))]
+        if len(core_rows) > 1 and len(core_rows[-1]) < MAX_WIDTH:
+            core_rows[-1] += ["🧻" for _ in range(MAX_WIDTH - len(core_rows[-1]))]
 
     @staticmethod
     def _clean_core(core: str) -> List[str]:
