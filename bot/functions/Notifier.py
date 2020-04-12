@@ -5,7 +5,7 @@ from typing import Dict
 
 import telegram
 from telegram import Bot
-from telegram.ext import JobQueue, Job
+from telegram.ext import JobQueue, Job, CallbackContext
 
 from neocortex import memories
 
@@ -70,17 +70,17 @@ def remember_preference_change_of(user: telegram.User) -> None:
     memories.toggle_wants_notification(memory_of_user)
 
 
-def notify_subscriber(bot: Bot, job: Job) -> None:
-    user = job.context  # type: telegram.User
+def notify_subscriber(context: CallbackContext) -> None:
+    user = context.job.context  # type: telegram.User
     text = "It is time.\n\n" + "".join(random.sample(exactly_1337_emoji, random.randint(13, 37)))
     try:
-        bot.send_message(chat_id=user.id, text=text)
+        context.bot.send_message(chat_id=user.id, text=text)
     except telegram.error.Unauthorized:
         unsubscribe(user)
         log.info('Someone blocked the bot but still had an active subscription. Unsubscribed him.')
 
 
-def remember_subscribers(queue: JobQueue) -> None:
+def remember_subscribers(bot: Bot, queue: JobQueue) -> None:
     for subscriber in memories.get_subscribers():
-        subscriber.bot = queue.bot
+        subscriber.bot = bot
         create_and_remember_job(job_queue=queue, user=subscriber)

@@ -23,9 +23,10 @@ def create_admin_list_from_env():
 
 LIST_OF_ADMINS = create_admin_list_from_env()
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "this is the box where i keep my old memories: https://i.imgur.com/WqLMDE3.jpg feat. matomat"
+VERSION = "Transitioned to v12: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transition-guide-to-Version-12.0"
 START_HELP = """
 *mozartize* - Get a mozartized version of your input
+*aehxtend* - Get a ähxtended version of your input
 *food* - Get some food!
 *exmatrikulieren* - Generiert eine Exmatrikulation für arg1 arg2, arg3 ... argN ist der Grund.
 *notify_me* - Toggle notifications
@@ -34,7 +35,7 @@ START_HELP = """
 *deposit* - Remember that you deposited some money!
 *matomat* - Buy drinks and more.
 
-mozartize und kudos gibts auch als *inline query*! Tippe: @ohm-noobs-meme-bot dein input.
+mozartize und aehxtend gibts auch als *inline query*! Tippe: @ohm-noobs-meme-bot dein input.
 """
 
 
@@ -48,6 +49,9 @@ class Sentence:
 
     def __repr__(self) -> str:
         return ' '.join(self.word_list)
+
+    def as_list(self) -> List[str]:
+        return self.word_list
 
 
 def chance_to_return_true(probability=0.5) -> bool:
@@ -69,9 +73,10 @@ def send_typing_action(func):
     """Sends typing action while processing func command."""
 
     @wraps(func)
-    def command_func(bot, update, *args, **kwargs):
-        bot.send_chat_action(chat_id=update.effective_message.chat_id, action=telegram.ChatAction.TYPING)
-        return func(bot, update, *args, **kwargs)
+    def command_func(*args, **kwargs):
+        update, context = args
+        context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=telegram.ChatAction.TYPING)
+        return func(update, context, **kwargs)
 
     return command_func
 

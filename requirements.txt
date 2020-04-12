@@ -1,3 +1,4 @@
+emoji_data_python
 pony
 certifi>=2018.1.18
 future>=0.16.0
