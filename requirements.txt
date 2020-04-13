@@ -1,7 +1,7 @@
 emoji_data_python
 pony
-certifi>=2018.1.18
-future>=0.16.0
-python-telegram-bot>=10.0.1
-requests>=2.19.1
-Pillow>=5.2.0
+certifi>=2019.11.28
+future>=0.18.2
+python-telegram-bot>=12.6.1
+requests>=2.23.0
+Pillow>=7.0.0
