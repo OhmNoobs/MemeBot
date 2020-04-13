@@ -15,5 +15,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: OhmNoobs/MemeBot/memebot
+          repository: ohmnoobs/memebot/memebot
           tag_with_ref: true
