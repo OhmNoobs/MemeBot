@@ -23,7 +23,7 @@ def create_admin_list_from_env():
 
 LIST_OF_ADMINS = create_admin_list_from_env()
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "Transitioned to v12: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transition-guide-to-Version-12.0"
+VERSION = "matomat"
 START_HELP = """
 *mozartize* - Get a mozartized version of your input
 *aehxtend* - Get a ähxtended version of your input
