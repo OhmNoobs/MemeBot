@@ -5,7 +5,7 @@ from typing import List, NamedTuple, Optional
 
 import telegram
 
-from exceptions import TransactionError, FloodingError, TransactionArgsParsingError
+from exceptions import TransactionError, TransactionArgsParsingError, FloodingDetectedException
 from neocortex import memories
 
 log = logging.getLogger()
@@ -14,7 +14,7 @@ INVALID_ADD_ARGS = "Please specify products like this:\n`Mate (0.7€) Beschreib
 MINIMUM_DEPOSIT = 0.01
 MAXIMUM_DEPOSIT = 50
 BASE_BLOCK_DURATION = datetime.timedelta(hours=1, minutes=30)
-TOO_MANY_TRANSACTIONS = "Too many transactions. Please wait before making attempting any more deposits."
+TOO_MANY_TRANSACTIONS = "Too many transactions. Please wait before attempting any more deposits."
 
 
 class ProductDescription(NamedTuple):
@@ -29,17 +29,18 @@ def flooding_protected_transaction_request(func):
     def wrapped(user: telegram.User, arguments: List[str], *args, **kwargs):
         blocked_users = memories.remember_blocked_users()
         user_blocked = [blocked_user for blocked_user in blocked_users if blocked_user.telegram_id == user.id]
-        if user_blocked:
+        if user_blocked[0]:
             user_blocked = user_blocked[0]
-            if user_blocked.banned_until < datetime.datetime.now():
-                return
+            if user_blocked.banned_until > datetime.datetime.now():
+                return f"You are blocked from making any transactions until {user_blocked.banned_until}"
             else:
                 memories.unblock_user(user_blocked)
         try:
             return func(user, arguments, *args, **kwargs)
-        except FloodingError as flooding_error:
+        except FloodingDetectedException as flooding_error:
+            flooding_error.log_transgression()
             blocked_until = datetime.datetime.now() + BASE_BLOCK_DURATION
-            memories.block_user(flooding_error.offender)
+            memories.block_user(flooding_error.offender, blocked_until)
             return f"{flooding_error} You are blocked from making any transactions until {blocked_until}"
 
     return wrapped
@@ -99,8 +100,6 @@ def buy(user: telegram.User, args: List[str]) -> str:
     try:
         new_balance = memories.memorize_transaction(from_user=customer, to_user=shop_owner, amount=item.price)
     except TransactionError as transaction_error:
-        if isinstance(transaction_error, FloodingError):
-            transaction_error.log_transgression(user)
         return str(transaction_error)
     return f"You bought 1x{item.name} for {str(item.price).replace('.', ',')}€. Your new balance is {new_balance:.2f}."
 
@@ -120,8 +119,6 @@ def deposit(depositor: telegram.User, args: List[str]) -> str:
         internal_user = memories.remember_telegram_user(depositor)
         new_balance = memories.memorize_transaction(internal_user, internal_user, amount)
     except TransactionError as transaction_error:
-        if isinstance(transaction_error, FloodingError):
-            transaction_error.log_transgression(depositor)
         return str(transaction_error)
     return f"Your new balance is {new_balance:.2f}€"
 

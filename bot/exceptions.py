@@ -30,12 +30,11 @@ class TooRichException(TransactionError):
     pass
 
 
-class FloodingError(TransactionError):
+class FloodingDetectedException(Exception):
 
-    def __init__(self, message: str):
+    def __init__(self, message: str, offender):
         super().__init__(message)
-        self.offender = None
-
-    def log_transgression(self, offender):
         self.offender = offender
+
+    def log_transgression(self):
         log.warning(f"Transaction flooding @{self.offender.username} detected")

@@ -7,7 +7,7 @@ from typing import Iterator
 import telegram
 from pony.orm import db_session, desc, select
 
-from exceptions import TooPoorException, TooRichException, FloodingError
+from exceptions import TooPoorException, TooRichException, FloodingDetectedException
 from functions.Matomat import ProductDescription, MAXIMUM_DEPOSIT, TOO_MANY_TRANSACTIONS
 from neocortex import User, Kudos, Product, Transaction
 
@@ -194,23 +194,23 @@ def _fail_on_flooding_attempt(sender: User) -> None:
     recent_transactions_by_depositor = select(
         t for t in Transaction if t.timestamp >= datetime.now() - RECENT_TIMESPAN and t.sender == sender
     )[:]
-    _fail_on_transaction_flooding(recent_transactions_by_depositor)
-    _fail_on_deposit_flooding(recent_transactions_by_depositor)
+    _fail_on_transaction_flooding(sender, recent_transactions_by_depositor)
+    _fail_on_deposit_flooding(sender, recent_transactions_by_depositor)
     pass  # yay!
 
 
-def _fail_on_transaction_flooding(recent_transactions_by_depositor):
+def _fail_on_transaction_flooding(sender: User, recent_transactions_by_depositor: typing.List[Transaction]):
     if len(recent_transactions_by_depositor) > TRANSACTION_FLOODING_THRESHOLD:
-        raise FloodingError(TOO_MANY_TRANSACTIONS)
+        raise FloodingDetectedException(TOO_MANY_TRANSACTIONS, offender=sender)
 
 
 @db_session
-def _fail_on_deposit_flooding(recent_transactions_by_depositor):
+def _fail_on_deposit_flooding(sender: User, recent_transactions_by_depositor: typing.List[Transaction]):
     recent_deposits = [
         transaction for transaction in recent_transactions_by_depositor if transaction.description == DEPOSIT
     ]
     if len(recent_deposits) > DEPOSIT_FLOODING_THRESHOLD:
-        raise FloodingError(TOO_MANY_TRANSACTIONS)
+        raise FloodingDetectedException(TOO_MANY_TRANSACTIONS, offender=sender)
 
 
 @db_session

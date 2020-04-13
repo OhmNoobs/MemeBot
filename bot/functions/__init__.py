@@ -73,14 +73,14 @@ def matomat(update: Update, _) -> None:
     update.message.reply_text('Kaufen:', reply_markup=Matomat.open_keyboard())
 
 
-@send_typing_action
-def buy(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(Matomat.buy(update.effective_user, context.args))
-
-
 @restricted
 def add_product(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(Matomat.add_product(context.args), parse_mode=telegram.ParseMode.MARKDOWN_V2)
+
+
+@send_typing_action
+def buy(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(Matomat.buy(update.effective_user, context.args))
 
 
 @send_typing_action
