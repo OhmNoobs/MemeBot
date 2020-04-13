@@ -1,8 +1,9 @@
+import datetime
 import unittest
 
 from functions import Matomat
 from functions.Matomat import INVALID_DEPOSIT_ARGS, MAXIMUM_DEPOSIT, MINIMUM_DEPOSIT, \
-    TOO_MANY_TRANSACTIONS
+    TOO_MANY_TRANSACTIONS, BASE_BLOCK_DURATION
 from neocortex.memories import DEPOSIT_FLOODING_THRESHOLD, TRANSACTION_FLOODING_THRESHOLD
 from tests.test import mock_telegram_user
 
@@ -51,6 +52,7 @@ class TestMatomat(unittest.TestCase):
 
         answer = Matomat.add_product(["l", "(l)"])
         self.assertEqual(Matomat.INVALID_ADD_ARGS, answer)
+        pass
 
     def test_add_product(self):
         answer = Matomat.add_product(["matomat", "(0.7€)"])
@@ -73,6 +75,7 @@ class TestMatomat(unittest.TestCase):
 
         answer = Matomat.add_product(["g", "(99,99€)"])
         self.assertEqual(f"g (99.99€) added.", answer)
+        pass
 
     def test_deposit(self):
         user_a = mock_telegram_user("User A")
@@ -120,7 +123,7 @@ class TestMatomat(unittest.TestCase):
         for _ in range(DEPOSIT_FLOODING_THRESHOLD + 1):
             Matomat.deposit(user, ["0.01"])
         answer = Matomat.deposit(user, ["0.01"])
-        self.assertEqual(TOO_MANY_TRANSACTIONS, answer)
+        self.assert_correct_flooding_protection_answer(answer)
         pass
 
     def test_transaction_flooding_protection(self):
@@ -131,4 +134,12 @@ class TestMatomat(unittest.TestCase):
         for _ in range(TRANSACTION_FLOODING_THRESHOLD):
             Matomat.buy(user, product)
         answer = Matomat.buy(user, product)
-        self.assertEqual(TOO_MANY_TRANSACTIONS, answer)
+        self.assert_correct_flooding_protection_answer(answer)
+        pass
+
+    def assert_correct_flooding_protection_answer(self, answer):
+        answer_parts = answer.split()
+        self.assertEqual(f"{TOO_MANY_TRANSACTIONS} You are blocked from making any transactions until", " ".join(answer_parts[:-2]))
+        expected_blocked_until = datetime.datetime.now() + BASE_BLOCK_DURATION
+        actual_blocked_until = datetime.datetime.fromisoformat(" ".join(answer_parts[-2:]))
+        self.assertAlmostEqual(expected_blocked_until, actual_blocked_until, delta=datetime.timedelta(milliseconds=50))

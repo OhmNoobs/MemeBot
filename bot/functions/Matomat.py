@@ -29,7 +29,7 @@ def flooding_protected_transaction_request(func):
     def wrapped(user: telegram.User, arguments: List[str], *args, **kwargs):
         blocked_users = memories.remember_blocked_users()
         user_blocked = [blocked_user for blocked_user in blocked_users if blocked_user.telegram_id == user.id]
-        if user_blocked[0]:
+        if user_blocked:
             user_blocked = user_blocked[0]
             if user_blocked.banned_until > datetime.datetime.now():
                 return f"You are blocked from making any transactions until {user_blocked.banned_until}"
