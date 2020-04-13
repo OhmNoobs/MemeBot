@@ -4,6 +4,7 @@
 https://hub.docker.com/r/dockerwoop/memebot/
 
 ## Setup
+Regardless if run in a container or not.
 ### Required Environment Variable
 
 | Variable | Expected Value |
@@ -12,3 +13,6 @@ https://hub.docker.com/r/dockerwoop/memebot/
 
 ## Running the tests
 `python -m unittest bot\tests`
+
+## Developing
+Database description: https://editor.ponyorm.com/user/woop/memebot
