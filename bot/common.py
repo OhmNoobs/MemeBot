@@ -1,7 +1,7 @@
 import os
 import random
 from functools import wraps
-from typing import Union
+from typing import Union, List
 import logging
 import telegram
 
@@ -83,11 +83,11 @@ def send_typing_action(func):
 
 def restricted(func):
     @wraps(func)
-    def wrapped(bot, update, *args, **kwargs):
+    def wrapped(update, *args, **kwargs):
         user_id = update.effective_user.id
         if user_id not in LIST_OF_ADMINS:
             log.info(f"Unauthorized access denied for {user_id}. Message: {update.message}")
             return
-        return func(bot, update, *args, **kwargs)
+        return func(update, *args, **kwargs)
 
     return wrapped

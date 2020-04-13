@@ -2,13 +2,12 @@ import telegram
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from functions import food_scraper, inline_bot, Exmatriculator, Notifier
-from functions.Aehxtender import Aehxtender
+from functions import food_scraper, inline_bot, Exmatriculator, Notifier, helpers
 from functions.Mozartizer import Mozartizer
 from functions.joke import make_joke_about
 from functions.kudos import KudosMessageParser
 from functions.ToiletPaper import ToiletPaper
-from functions.Matomat import Matomat
+import functions.Matomat as Matomat
 from common import Sentence, send_typing_action, restricted
 
 
@@ -18,7 +17,7 @@ def hello(update: Update, _) -> None:
 
 def start(update: Update, _):
     update.message.reply_text(helpers.help_user(update.message.from_user.first_name),
-                              parse_mode=telegram.ParseMode.MARKDOWN)
+                              parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
 
 def version(update: Update, _) -> None:
@@ -27,10 +26,6 @@ def version(update: Update, _) -> None:
 
 def mozartize(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(Mozartizer(Sentence(context.args)).mozartize())
-
-
-def aehxtend(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(Aehxtender(Sentence(context.args)).get_aehxtended())
 
 
 def inline_query(update: Update, _) -> None:
@@ -74,20 +69,20 @@ def toilet_paper(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(ToiletPaper(context.args).wrap())
 
 
-def matomat(_, update) -> None:
+def matomat(update: Update, _) -> None:
     update.message.reply_text('Kaufen:', reply_markup=Matomat.open_keyboard())
 
 
 @send_typing_action
-def buy(_, update, args) -> None:
-    update.message.reply_text(Matomat.buy(update.effective_user, args))
+def buy(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(Matomat.buy(update.effective_user, context.args))
 
 
 @restricted
-def add_product(_, update, args) -> None:
-    update.message.reply_text(Matomat.add_product(args))
+def add_product(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(Matomat.add_product(context.args), parse_mode=telegram.ParseMode.MARKDOWN_V2)
 
 
 @send_typing_action
-def deposit(_, update, args):
-    update.message.reply_text(Matomat.deposit(update.effective_user, args))
+def deposit(update: Update, context: CallbackContext):
+    update.message.reply_text(Matomat.deposit(update.effective_user, context.args))

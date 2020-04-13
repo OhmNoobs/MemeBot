@@ -10,7 +10,7 @@ from neocortex import memories
 
 log = logging.getLogger()
 INVALID_DEPOSIT_ARGS = "Invalid arguments. Use this like /deposit 20,3"
-INVALID_ADD_ARGS = "Please specify products like this:\n`Mate 0.7€ Beschreibung der Mate`"
+INVALID_ADD_ARGS = "Please specify products like this:\n`Mate (0.7€) Beschreibung der Mate`"
 MINIMUM_DEPOSIT = 0.01
 MAXIMUM_DEPOSIT = 50
 BASE_BLOCK_DURATION = datetime.timedelta(hours=1, minutes=30)
@@ -91,7 +91,7 @@ def buy(user: telegram.User, args: List[str]) -> str:
     customer = memories.remember_telegram_user(user)
     product_description = extract_product_description(args)
     if not product_description:
-        return "Use the Keyboard provided by /buy"
+        return "Use the Keyboard provided by /matomat"
     shop_owner = memories.remember_shop_owner()
     item = memories.remember_product(product_description)
     if not item:
